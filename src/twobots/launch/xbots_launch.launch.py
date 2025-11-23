@@ -33,7 +33,7 @@ from launch.actions import GroupAction
 from launch_ros.actions import PushRosNamespace
 
 def generate_launch_description():
-    num_bots = 3
+    num_bots = 10
 
     package_dir = get_package_share_directory('webots_ros2_turtlebot')
     my_pkg = get_package_share_directory('twobots')
@@ -170,11 +170,12 @@ def generate_launch_description():
             target_driver=turtlebot_driver,
             nodes_to_start=navigation_node + ros_control_spawner
         )
+        waiting_nodes.append(waiting_node)
 
     return LaunchDescription([
         DeclareLaunchArgument(
             'world',
-            default_value='world_3bot.wbt',
+            default_value='world_10bot.wbt',
             description='Choose one of the world files from `/webots_ros2_turtlebot/world` directory'
         ),
         DeclareLaunchArgument(
