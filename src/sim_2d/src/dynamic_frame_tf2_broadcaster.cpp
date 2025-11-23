@@ -24,6 +24,10 @@ using namespace std::chrono_literals;
 
 const double PI = 3.141592653589793238463;
 
+/**
+ * @class DynamicFrameBroadcaster
+ * @brief dynamic frame broadcaster
+ */
 class DynamicFrameBroadcaster : public rclcpp::Node
 {
 public:
