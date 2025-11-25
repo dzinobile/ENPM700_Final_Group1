@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package format="3">
-  <name>twobots</name>
+  <name>webots_practice</name>
   <version>0.0.1</version>
   <description>Launches Webots with a TurtleBot3 driver.</description>
 
@@ -17,6 +17,7 @@
   <exec_depend>robot_state_publisher</exec_depend>
   <exec_depend>controller_manager</exec_depend>
   <exec_depend>tf2_ros</exec_depend>
+  <exec_depend>geometry_msgs</exec_depend>
 
   <exec_depend>diff_drive_controller</exec_depend>
   <exec_depend>joint_state_broadcaster</exec_depend>

@@ -36,7 +36,7 @@ def generate_launch_description():
     num_bots = 10
 
     package_dir = get_package_share_directory('webots_ros2_turtlebot')
-    my_pkg = get_package_share_directory('twobots')
+    my_pkg = get_package_share_directory('webots_practice')
     world = LaunchConfiguration('world')
     print(world)
     mode = LaunchConfiguration('mode')
@@ -54,7 +54,7 @@ def generate_launch_description():
     turtlebot_drivers = []
     waiting_nodes = []
 
-    for i in range(1,num_bots+1):
+    for i in range(0,num_bots+1):
         robot_state_publisher = Node(
             namespace=f'robot{i}',
             package='robot_state_publisher',
@@ -175,7 +175,7 @@ def generate_launch_description():
     return LaunchDescription([
         DeclareLaunchArgument(
             'world',
-            default_value='world_10bot.wbt',
+            default_value='my_world.wbt',
             description='Choose one of the world files from `/webots_ros2_turtlebot/world` directory'
         ),
         DeclareLaunchArgument(
