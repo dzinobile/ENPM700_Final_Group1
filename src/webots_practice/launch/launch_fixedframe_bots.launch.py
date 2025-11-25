@@ -58,8 +58,13 @@ def generate_launch_description():
     footprint_publishers = []
     turtlebot_drivers = []
     waiting_nodes = []
+    broadcaster_nodes = []
+    
+
+    
 
     for i in range(0,num_bots+1):
+
         robot_state_publisher = Node(
             namespace=f'robot{i}',
             package='robot_state_publisher',
@@ -177,7 +182,10 @@ def generate_launch_description():
         )
         waiting_nodes.append(waiting_node)
 
+
+
     return LaunchDescription([
+
         DeclareLaunchArgument(
             'world',
             default_value='my_world.wbt',
