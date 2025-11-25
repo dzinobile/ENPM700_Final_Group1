@@ -1,0 +1,10 @@
+{
+    "cmake.sourceDirectory": "/home/dzinobile/github/3_semester/ENPM700/ENPM700_Final_Group1/src/sim_2d",
+    "files.associations": {
+        "sstream": "cpp",
+        "string": "cpp",
+        "memory": "cpp",
+        "functional": "cpp",
+        "chrono": "cpp"
+    }
+}
