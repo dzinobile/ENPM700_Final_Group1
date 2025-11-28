@@ -22,6 +22,10 @@ add_executable(publisher src/simple_publisher.cpp)
 ament_target_dependencies(publisher rclcpp geometry_msgs)
 install(TARGETS publisher DESTINATION lib/${PROJECT_NAME})
 
+add_executable(pursuer src/pursuer.cpp)
+ament_target_dependencies(pursuer rclcpp geometry_msgs nav_msgs tf2)
+install(TARGETS pursuer DESTINATION lib/${PROJECT_NAME})
+
 ament_export_include_directories(
   include
 )
