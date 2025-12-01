@@ -1,15 +1,16 @@
 <?xml version="1.0"?>
 <package format="3">
-  <name>webots_practice</name>
+  <name>sheepdog</name>
   <version>0.0.1</version>
   <description>Launches Webots with a TurtleBot3 driver.</description>
 
-  <maintainer email="you@domain.com">Your Name</maintainer>
+  <maintainer email="you@domain.com">Anvesh and Daniel</maintainer>
   <license>Apache-2.0</license>
 
   <!-- This is a C++ package -->
   <buildtool_depend>ament_cmake</buildtool_depend>
-
+  <depend>nav2_msgs</depend>
+  <depend>rclcpp_action</depend>
   <!-- Runtime dependencies -->
   <exec_depend>rclcpp</exec_depend>
   <exec_depend>webots_ros2_driver</exec_depend>

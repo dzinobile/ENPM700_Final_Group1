@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(webots_practice)
+project(sheepdog)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
@@ -15,25 +15,51 @@ find_package(tf2_ros REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
 find_package(pluginlib REQUIRED)
+find_package(webots_ros2_msgs REQUIRED)
+find_package(nav2_msgs REQUIRED)
+find_package(rclcpp_action REQUIRED)
 
 include_directories(include)
 
-add_executable(publisher src/simple_publisher.cpp)
-ament_target_dependencies(publisher rclcpp geometry_msgs)
-install(TARGETS publisher DESTINATION lib/${PROJECT_NAME})
+add_executable(sheep_broadcaster src/sheep_broadcaster.cpp)
+ament_target_dependencies(sheep_broadcaster
+  rclcpp
+  tf2_ros
+  geometry_msgs
+)
+
+install(TARGETS
+  sheep_broadcaster
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+add_executable(sheep_nav_trigger src/sheep_nav_trigger.cpp)
+ament_target_dependencies(sheep_nav_trigger
+  rclcpp
+  rclcpp_action
+  geometry_msgs
+  tf2
+  tf2_ros
+  tf2_geometry_msgs
+  nav2_msgs
+)
+
+install(TARGETS
+  sheep_nav_trigger
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+add_executable(nav_goal_sender src/nav_goal_sender.cpp)
+ament_target_dependencies(nav_goal_sender rclcpp geometry_msgs nav2_msgs rclcpp_action)
+install(TARGETS nav_goal_sender DESTINATION lib/${PROJECT_NAME})
 
 ament_export_include_directories(
   include
 )
 install(
-  DIRECTORY launch worlds resource
+  DIRECTORY  launch worlds resource
   DESTINATION share/${PROJECT_NAME}
 )
-
-
-
-
-
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)

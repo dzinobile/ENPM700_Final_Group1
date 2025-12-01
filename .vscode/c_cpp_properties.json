@@ -4,9 +4,7 @@
             "name": "Linux",
             "includePath": [
                 "/opt/ros/humble/include/**",
-                "${workspaceFolder}/src/webots_practice/include/**",
-                "${workspaceFolder}/src/webots_practice/include",
-                "/opt/ros/humble/include/geometry_msgs"
+                "${workspaceFolder}/src/webots_practice/include/**"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",
