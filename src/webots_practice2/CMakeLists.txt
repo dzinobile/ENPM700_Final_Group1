@@ -29,6 +29,34 @@ include_directories(include)
 # ament_target_dependencies(pursuer rclcpp webots_ros2_msgs geometry_msgs nav_msgs tf2)
 # install(TARGETS pursuer DESTINATION lib/${PROJECT_NAME})
 
+add_executable(sheep_broadcaster src/sheep_broadcaster.cpp)
+ament_target_dependencies(sheep_broadcaster
+  rclcpp
+  tf2_ros
+  geometry_msgs
+)
+
+install(TARGETS
+  sheep_broadcaster
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+add_executable(sheep_nav_trigger src/sheep_nav_trigger.cpp)
+ament_target_dependencies(sheep_nav_trigger
+  rclcpp
+  rclcpp_action
+  geometry_msgs
+  tf2
+  tf2_ros
+  tf2_geometry_msgs
+  nav2_msgs
+)
+
+install(TARGETS
+  sheep_nav_trigger
+  DESTINATION lib/${PROJECT_NAME}
+)
+
 add_executable(nav_goal_sender src/nav_goal_sender.cpp)
 ament_target_dependencies(nav_goal_sender rclcpp geometry_msgs nav2_msgs rclcpp_action)
 install(TARGETS nav_goal_sender DESTINATION lib/${PROJECT_NAME})
