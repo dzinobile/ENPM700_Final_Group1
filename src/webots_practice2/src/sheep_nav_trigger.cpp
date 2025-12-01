@@ -28,7 +28,7 @@ public:
 
   SheepNavTrigger()
   : Node("sheep_nav_trigger"),
-    trigger_distance_(5.0),
+    trigger_distance_(2.0),
     triggered_(false)
   {
     tf_buffer_ = std::make_shared<tf2_ros::Buffer>(this->get_clock());

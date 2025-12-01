@@ -54,6 +54,7 @@ def generate_launch_description():
             'robot_description': '<robot name=""><link name=""/></robot>'
         }],
     )
+    
 
     footprint_publisher = Node(
         package='tf2_ros',
@@ -117,6 +118,18 @@ def generate_launch_description():
             condition=launch.conditions.IfCondition(use_nav))
         navigation_nodes.append(turtlebot_navigation)
 
+    map_saver = IncludeLaunchDescription(
+    PythonLaunchDescriptionSource(os.path.join(
+        get_package_share_directory('nav2_map_server'),
+        'launch',
+        'map_saver_server.launch.py')),
+    launch_arguments=[
+        ('use_sim_time', use_sim_time),
+    ],
+    condition=launch.conditions.IfCondition(use_nav)
+    )
+    navigation_nodes.append(map_saver)
+
     # SLAM
     if 'turtlebot3_cartographer' in get_packages_with_prefixes():
         turtlebot_slam = IncludeLaunchDescription(
@@ -133,6 +146,9 @@ def generate_launch_description():
         target_driver=turtlebot_driver,
         nodes_to_start=navigation_nodes + ros_control_spawners
     )
+
+
+    
 
     return LaunchDescription([
         DeclareLaunchArgument(

@@ -33,8 +33,8 @@ private:
     tf_msg.child_frame_id = "sheep";    // child frame
 
     // Example translation (change as needed)
-    tf_msg.transform.translation.x = 3.0;
-    tf_msg.transform.translation.y = 1.5;
+    tf_msg.transform.translation.x = 4.0;
+    tf_msg.transform.translation.y = 4.0;
     tf_msg.transform.translation.z = 0.0;
 
     // Example rotation: roll = 0, pitch = 0, yaw = 0.5 rad

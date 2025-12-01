@@ -1,0 +1,107 @@
+#VRML_SIM R2025a utf8
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/develop/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/develop/projects/robots/robotis/turtlebot/protos/TurtleBot3Burger.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/develop/projects/devices/robotis/protos/RobotisLds01.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/develop/projects/objects/floors/protos/Floor.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/develop/projects/appearances/protos/Grass.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/develop/projects/objects/trees/protos/Pine.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/develop/projects/objects/street_furniture/protos/Fence.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/develop/projects/objects/animals/protos/Sheep.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/garden/protos/Gnome.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/garden/protos/WateringCan.proto"
+
+WorldInfo {
+  info [
+    "Simple TurtleBot3 Burger simulation that can be controlled by a ROS."
+  ]
+  title "ROS2 simulation of the TurtleBot3 Burger robot"
+  basicTimeStep 20
+}
+Viewpoint {
+  orientation 0.08766801320833299 -0.8118779257894063 -0.5772075476602804 5.1272921140014045
+  position -17.646012559213535 -20.557947966386422 28.17103517890138
+  follow "TurtleBot3Burger:LDS-01"
+}
+TexturedBackground {
+  texture "empty_office"
+  skybox FALSE
+}
+TurtleBot3Burger {
+  controller "<extern>"
+  controllerArgs [
+    ""
+  ]
+  extensionSlot [
+    Solid {
+      name "imu_link"
+    }
+    GPS {
+    }
+    InertialUnit {
+      name "inertial_unit"
+    }
+    RobotisLds01 {
+    }
+  ]
+}
+Floor {
+  name "floor(1)"
+  tileSize 2 2
+  appearance Grass {
+    textureTransform TextureTransform {
+      scale 0.6 0.6
+    }
+  }
+}
+Pine {
+  translation 1.72037 -0.107716 0
+  rotation 0 0 1 1
+  name "pinetree (1)"
+}
+Sheep {
+  translation -3.14033 3.80589 0
+  rotation 0 0 1 1
+  name "sheep (1)"
+}
+Fence {
+  translation 5 -5 0
+  rotation 0 0 1 1.5236
+  name "fence (1)"
+}
+Fence {
+  translation 0 -4.81 0
+  rotation 0 0 1 1.5708
+  name "fence(1)"
+}
+Fence {
+  translation 4.9 -4.76 0
+}
+Gnome {
+  translation 1.14 -2.72 0
+}
+Fence {
+  translation 4.97 0 0
+  name "fence(3)"
+}
+Fence {
+  translation -1.83663e-05 5 0
+  rotation 0 0 1 1.5708
+  name "fence(4)"
+}
+Fence {
+  translation -5.0063e-06 4.91 0
+  rotation 0 0 1 -1.5707953071795862
+  name "fence(5)"
+}
+WateringCan {
+  translation -2.95 -1.63 0
+}
+Fence {
+  translation -4.98 -4.95 0
+  name "fence(2)"
+}
+Fence {
+  translation -4.99 0 0
+  name "fence(6)"
+}

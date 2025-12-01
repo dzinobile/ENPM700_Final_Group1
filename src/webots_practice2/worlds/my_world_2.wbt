@@ -1,0 +1,121 @@
+#VRML_SIM R2025a utf8
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/develop/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/develop/projects/robots/robotis/turtlebot/protos/TurtleBot3Burger.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/develop/projects/devices/robotis/protos/RobotisLds01.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/develop/projects/objects/floors/protos/Floor.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/develop/projects/appearances/protos/Grass.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/develop/projects/objects/trees/protos/Pine.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/develop/projects/objects/street_furniture/protos/Fence.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/develop/projects/objects/animals/protos/Sheep.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/garden/protos/Gnome.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/garden/protos/WateringCan.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/garden/protos/PicketFenceWithDoor.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/garden/protos/PicketFence.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/robots/robotis/darwin-op/protos/Darwin-op.proto"
+
+WorldInfo {
+  info [
+    "Simple TurtleBot3 Burger simulation that can be controlled by a ROS."
+  ]
+  title "ROS2 simulation of the TurtleBot3 Burger robot"
+  basicTimeStep 20
+}
+Viewpoint {
+  orientation 0.3219448184701813 -0.5363763131948321 -0.780161511806191 4.4753260248597435
+  position 0.637146850524667 -10.7779084494783 17.084204724063873
+  follow "TurtleBot3Burger:LDS-01"
+}
+TexturedBackground {
+  texture "empty_office"
+  skybox FALSE
+}
+TurtleBot3Burger {
+  controller "<extern>"
+  controllerArgs [
+    ""
+  ]
+  extensionSlot [
+    Solid {
+      name "imu_link"
+    }
+    GPS {
+    }
+    InertialUnit {
+      name "inertial_unit"
+    }
+    RobotisLds01 {
+    }
+  ]
+}
+Floor {
+  name "floor(1)"
+  tileSize 2 2
+  size 20 20
+  appearance Grass {
+    textureTransform TextureTransform {
+      scale 0.6 0.6
+    }
+  }
+}
+Pine {
+  translation 1.72037 -0.107716 0
+  rotation 0 0 1 1
+  name "pinetree (1)"
+}
+Darwin-op {
+  translation -3 3 0.227
+}
+Sheep {
+  translation -3 3 0
+  rotation 0 0 1 1
+  name "sheep (1)"
+}
+Fence {
+  translation 5 -5 0
+  rotation 0 0 1 1.57
+  name "fence (1)"
+}
+Fence {
+  translation 0 -5 0
+  rotation 0 0 1 1.5708
+  name "fence(1)"
+}
+PicketFence {
+  translation 0.31 4.77 0
+}
+Fence {
+  translation 5 -5 0
+}
+PicketFenceWithDoor {
+  translation 4.84 3.07002 0
+  rotation 0 0 1 1.5708
+}
+Gnome {
+  translation 1.14 -2.72 0
+}
+Fence {
+  translation 5 0 0
+  name "fence(3)"
+}
+Fence {
+  translation 0 5 0
+  rotation 0 0 1 1.5708
+  name "fence(4)"
+}
+Fence {
+  translation 0 5 0
+  rotation 0 0 1 -1.5707953071795862
+  name "fence(5)"
+}
+WateringCan {
+  translation -2.95 -1.63 0
+}
+Fence {
+  translation -5 -5 0
+  name "fence(2)"
+}
+Fence {
+  translation -5 0 0
+  name "fence(6)"
+}
