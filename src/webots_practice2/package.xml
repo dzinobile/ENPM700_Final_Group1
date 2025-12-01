@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package format="3">
-  <name>webots_practice</name>
+  <name>webots_practice2</name>
   <version>0.0.1</version>
   <description>Launches Webots with a TurtleBot3 driver.</description>
 

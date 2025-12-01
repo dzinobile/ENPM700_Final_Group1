@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(webots_practice)
+project(webots_practice2)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
@@ -21,13 +21,13 @@ find_package(rclcpp_action REQUIRED)
 
 include_directories(include)
 
-add_executable(publisher src/simple_publisher.cpp)
-ament_target_dependencies(publisher rclcpp geometry_msgs)
-install(TARGETS publisher DESTINATION lib/${PROJECT_NAME})
+# add_executable(publisher src/simple_publisher.cpp)
+# ament_target_dependencies(publisher rclcpp geometry_msgs)
+# install(TARGETS publisher DESTINATION lib/${PROJECT_NAME})
 
-add_executable(pursuer src/pursuer.cpp)
-ament_target_dependencies(pursuer rclcpp webots_ros2_msgs geometry_msgs nav_msgs tf2)
-install(TARGETS pursuer DESTINATION lib/${PROJECT_NAME})
+# add_executable(pursuer src/pursuer.cpp)
+# ament_target_dependencies(pursuer rclcpp webots_ros2_msgs geometry_msgs nav_msgs tf2)
+# install(TARGETS pursuer DESTINATION lib/${PROJECT_NAME})
 
 add_executable(nav_goal_sender src/nav_goal_sender.cpp)
 ament_target_dependencies(nav_goal_sender rclcpp geometry_msgs nav2_msgs rclcpp_action)
@@ -37,7 +37,7 @@ ament_export_include_directories(
   include
 )
 install(
-  DIRECTORY launch worlds resource
+  DIRECTORY  launch worlds resource
   DESTINATION share/${PROJECT_NAME}
 )
 

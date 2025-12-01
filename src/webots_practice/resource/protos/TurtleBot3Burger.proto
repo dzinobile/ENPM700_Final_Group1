@@ -5,12 +5,12 @@
 # keywords: robot/wheeled
 # Burger model of the third version of the TurtleBot robot.
 
-EXTERNPROTO "webots://projects/devices/robotis/protos/RobotisLds01.proto"
-EXTERNPROTO "webots://projects/appearances/protos/TireRubber.proto"
-EXTERNPROTO "webots://projects/appearances/protos/Pcb.proto"
-EXTERNPROTO "webots://projects/appearances/protos/RoughPolymer.proto"
-EXTERNPROTO "webots://projects/appearances/protos/MattePaint.proto"
-EXTERNPROTO "webots://projects/appearances/protos/BrushedAluminium.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/develop/projects/devices/robotis/protos/RobotisLds01.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/develop/projects/appearances/protos/TireRubber.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/develop/projects/appearances/protos/Pcb.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/develop/projects/appearances/protos/RoughPolymer.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/develop/projects/appearances/protos/MattePaint.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/develop/projects/appearances/protos/BrushedAluminium.proto"
 
 PROTO TurtleBot3Burger [
   field SFVec3f    translation     0 0 0                 # Is `Pose.translation`.
@@ -47,7 +47,7 @@ PROTO TurtleBot3Burger [
           RotationalMotor {
             name "right wheel motor"
             consumptionFactor -0.001
-            maxVelocity 20
+            maxVelocity 60
           }
           PositionSensor {
             name "right wheel sensor"
@@ -135,7 +135,7 @@ PROTO TurtleBot3Burger [
           RotationalMotor {
             name "left wheel motor"
             consumptionFactor -0.001
-            maxVelocity 20
+            maxVelocity 60
           }
           PositionSensor {
             name "left wheel sensor"

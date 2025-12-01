@@ -58,6 +58,7 @@ def generate_launch_description():
     footprint_publishers = []
     turtlebot_drivers = []
     waiting_nodes = []
+    pursuer_nodes = []
 
     for i in range(0,num_bots+1):
         robot_state_publisher = Node(
@@ -129,47 +130,46 @@ def generate_launch_description():
         turtlebot_drivers.append(turtlebot_driver)
 
         navigation_node = []
-        if i == 1:
-            os.environ['TURTLEBOT3_MODEL'] = 'burger'
-            nav2_map = os.path.join(package_dir, 'resource', 'turtlebot3_burger_example_map.yaml')
-            nav2_params = os.path.join(package_dir, 'resource', 'nav2_params.yaml')
-            if 'turtlebot3_navigation2' in get_packages_with_prefixes():
-                turtlebot_navigation = GroupAction([
-                    PushRosNamespace(f'robot{i}'),
-                    IncludeLaunchDescription(
-                        PythonLaunchDescriptionSource(
-                            os.path.join(
-                                get_package_share_directory('turtlebot3_navigation2'),
-                                'launch',
-                                'navigation2.launch.py'
-                            )
-                        ),
-                        launch_arguments=[
-                            ('map', nav2_map),
-                            ('params_file', nav2_params),
-                            ('use_sim_time', use_sim_time),
-                        ],
-                        condition=launch.conditions.IfCondition(use_nav)
-                    )
+        os.environ['TURTLEBOT3_MODEL'] = 'burger'
+        nav2_map = os.path.join(package_dir, 'resource', 'turtlebot3_burger_example_map.yaml')
+        nav2_params = os.path.join(package_dir, 'resource', 'nav2_params.yaml')
+        if 'turtlebot3_navigation2' in get_packages_with_prefixes():
+            turtlebot_navigation = GroupAction([
+                PushRosNamespace(f'robot{i}'),
+                IncludeLaunchDescription(
+                    PythonLaunchDescriptionSource(
+                        os.path.join(
+                            get_package_share_directory('turtlebot3_navigation2'),
+                            'launch',
+                            'navigation2.launch.py'
+                        )
+                    ),
+                    launch_arguments=[
+                        ('map', nav2_map),
+                        ('params_file', nav2_params),
+                        ('use_sim_time', use_sim_time),
+                    ],
+                    condition=launch.conditions.IfCondition(use_nav)
+                )
 
-                ])
+            ])
 
-                navigation_node.append(turtlebot_navigation)
+            navigation_node.append(turtlebot_navigation)
 
-            if 'turtlebot3_cartographer' in get_packages_with_prefixes():
-                turtlebot_slam = GroupAction([
-                    PushRosNamespace(f'robot{i}'),
-                    IncludeLaunchDescription(
-                        PythonLaunchDescriptionSource(os.path.join(
-                            get_package_share_directory('turtlebot3_cartographer'), 'launch', 'cartographer.launch.py')),
-                        launch_arguments=[
-                            ('use_sim_time', use_sim_time),
-                        ],
-                        condition=launch.conditions.IfCondition(use_slam))
+        if 'turtlebot3_cartographer' in get_packages_with_prefixes():
+            turtlebot_slam = GroupAction([
+                PushRosNamespace(f'robot{i}'),
+                IncludeLaunchDescription(
+                    PythonLaunchDescriptionSource(os.path.join(
+                        get_package_share_directory('turtlebot3_cartographer'), 'launch', 'cartographer.launch.py')),
+                    launch_arguments=[
+                        ('use_sim_time', use_sim_time),
+                    ],
+                    condition=launch.conditions.IfCondition(use_slam))
 
-                ])
+            ])
 
-                navigation_node.append(turtlebot_slam)
+            navigation_node.append(turtlebot_slam)
 
 
         waiting_node = WaitForControllerConnection(
@@ -177,6 +177,17 @@ def generate_launch_description():
             nodes_to_start=navigation_node + ros_control_spawner
         )
         waiting_nodes.append(waiting_node)
+        if i > 0:
+            pursuer_node = Node(
+                package='webots_practice',
+                executable='pursuer',
+                output='screen',
+                parameters=[{
+                    'robot_id': i,
+                    'target_robot_id': 0,
+            }],
+            )
+            pursuer_nodes.append(pursuer_node)
 
     return LaunchDescription([
         DeclareLaunchArgument(
@@ -195,6 +206,7 @@ def generate_launch_description():
         *footprint_publishers,
         *turtlebot_drivers,
         *waiting_nodes,
+        *pursuer_nodes,
 
         # This action will kill all nodes once the Webots simulation has exited
         launch.actions.RegisterEventHandler(

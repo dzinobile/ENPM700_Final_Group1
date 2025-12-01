@@ -1,12 +1,12 @@
 #include <memory>
 #include <string>
 #include <cmath>
+#include <algorithm>
 
 #include "rclcpp/rclcpp.hpp"
 #include "geometry_msgs/msg/twist.hpp"
-#include "nav_msgs/msg/odometry.hpp"
-#include "tf2/LinearMath/Quaternion.h"
-#include "tf2/LinearMath/Matrix3x3.h"
+#include "geometry_msgs/msg/point_stamped.hpp"
+#include "webots_ros2_msgs/msg/float_stamped.hpp"
 
 class PursuitController : public rclcpp::Node
 {
@@ -14,117 +14,158 @@ public:
     PursuitController()
     : Node("pursuit_controller")
     {
-        // Declare parameters with default values
+        // Parameters
         this->declare_parameter<int>("robot_id", 1);
         this->declare_parameter<int>("target_robot_id", 0);
-        this->declare_parameter<double>("pursuit_distance", 0.01);
-        this->declare_parameter<double>("max_linear_speed", 0.22);
+        this->declare_parameter<double>("pursuit_distance", 0.5);
+        this->declare_parameter<double>("max_linear_speed", 0.6);
         this->declare_parameter<double>("max_angular_speed", 2.0);
+        this->declare_parameter<double>("kp_angular", 2.0);
+        this->declare_parameter<double>("alignment_threshold", 0.3);
 
         robot_id_ = this->get_parameter("robot_id").as_int();
         target_id_ = this->get_parameter("target_robot_id").as_int();
         pursuit_distance_ = this->get_parameter("pursuit_distance").as_double();
         max_linear_speed_ = this->get_parameter("max_linear_speed").as_double();
         max_angular_speed_ = this->get_parameter("max_angular_speed").as_double();
+        kp_angular_ = this->get_parameter("kp_angular").as_double();
+        alignment_threshold_ = this->get_parameter("alignment_threshold").as_double();
 
-        // Subscribers
-        my_odom_sub_ = this->create_subscription<nav_msgs::msg::Odometry>(
-            "robot" + std::to_string(robot_id_) + "/diffdrive_controller/odom", 10,
-            std::bind(&PursuitController::odom_callback, this, std::placeholders::_1));
+        // GPS subscriptions
+        my_gps_sub_ = this->create_subscription<geometry_msgs::msg::PointStamped>(
+            "/robot" + std::to_string(robot_id_) + "/robot" + std::to_string(robot_id_) + "/gps",
+            10,
+            std::bind(&PursuitController::my_gps_callback, this, std::placeholders::_1)
+        );
 
-        target_odom_sub_ = this->create_subscription<nav_msgs::msg::Odometry>(
-            "robot" + std::to_string(target_id_) + "/diffdrive_controller/odom", 10,
-            std::bind(&PursuitController::target_odom_callback, this, std::placeholders::_1));
+        target_gps_sub_ = this->create_subscription<geometry_msgs::msg::PointStamped>(
+            "/robot" + std::to_string(target_id_) + "/robot" + std::to_string(target_id_) + "/gps",
+            10,
+            std::bind(&PursuitController::target_gps_callback, this, std::placeholders::_1)
+        );
 
-        // Publisher
+        // Compass subscription
+        my_compass_sub_ = this->create_subscription<webots_ros2_msgs::msg::FloatStamped>(
+            "/robot" + std::to_string(robot_id_) + "/robot" + std::to_string(robot_id_) + "/compass/bearing",
+            10,
+            std::bind(&PursuitController::my_compass_callback, this, std::placeholders::_1)
+        );
+
+        // Velocity publisher
         cmd_vel_pub_ = this->create_publisher<geometry_msgs::msg::Twist>(
-            "robot" + std::to_string(robot_id_) + "/diffdrive_controller/cmd_vel_unstamped", 10);
+            "/robot" + std::to_string(robot_id_) + "/diffdrive_controller/cmd_vel_unstamped",
+            10
+        );
 
-        // Timer
+        // Control timer
         timer_ = this->create_wall_timer(
-            std::chrono::milliseconds(100),
-            std::bind(&PursuitController::control_loop, this));
+            std::chrono::milliseconds(50),
+            std::bind(&PursuitController::control_loop, this)
+        );
 
         RCLCPP_INFO(this->get_logger(), "Robot %d pursuing Robot %d", robot_id_, target_id_);
     }
 
 private:
-    void odom_callback(const nav_msgs::msg::Odometry::SharedPtr msg)
+    void my_gps_callback(const geometry_msgs::msg::PointStamped::SharedPtr msg)
     {
-        my_odom_ = msg;
+        my_pos_ = msg;
     }
 
-    void target_odom_callback(const nav_msgs::msg::Odometry::SharedPtr msg)
+    void target_gps_callback(const geometry_msgs::msg::PointStamped::SharedPtr msg)
     {
-        target_odom_ = msg;
+        target_pos_ = msg;
     }
 
-    double get_yaw_from_quaternion(const geometry_msgs::msg::Quaternion &q)
+    void my_compass_callback(const webots_ros2_msgs::msg::FloatStamped::SharedPtr msg)
     {
-        tf2::Quaternion quat(q.x, q.y, q.z, q.w);
-        tf2::Matrix3x3 m(quat);
-        double roll, pitch, yaw;
-        m.getRPY(roll, pitch, yaw);
-        return yaw;
+        // CRITICAL FIX: Normalize the compass reading immediately
+        // The compass gives cumulative rotation, we need [-pi, pi]
+        my_yaw_ = normalize_angle(msg->data);
+    }
+
+    double normalize_angle(double angle)
+    {
+        // Wrap angle to [-pi, pi]
+        return std::atan2(std::sin(angle), std::cos(angle));
     }
 
     void control_loop()
     {
-        if (!my_odom_ || !target_odom_)
+        // Wait for sensor data
+        if (!my_pos_ || !target_pos_)
         {
-            RCLCPP_DEBUG(this->get_logger(), "Waiting for odometry data...");
+            RCLCPP_DEBUG(this->get_logger(), "Waiting for GPS data...");
             return;
         }
 
-        double my_x = my_odom_->pose.pose.position.x;
-        double my_y = my_odom_->pose.pose.position.y;
-        double my_yaw = get_yaw_from_quaternion(my_odom_->pose.pose.orientation);
+        // Calculate vector from robot to target
+        double dx = target_pos_->point.x - my_pos_->point.x;
+        double dy = target_pos_->point.y - my_pos_->point.y;
+        double distance = std::sqrt(dx * dx + dy * dy);
 
-        double target_x = target_odom_->pose.pose.position.x;
-        double target_y = target_odom_->pose.pose.position.y;
-
-        double dx = target_x - my_x;
-        double dy = target_y - my_y;
-        double distance = std::sqrt(dx*dx + dy*dy);
+        // Calculate angle to target in world frame
         double angle_to_target = std::atan2(dy, dx);
-
-        double angle_diff = angle_to_target - my_yaw;
-        angle_diff = std::atan2(std::sin(angle_diff), std::cos(angle_diff));
+        
+        // Calculate heading error (difference between where we're facing and where target is)
+        double angle_error = normalize_angle(angle_to_target - my_yaw_);
 
         geometry_msgs::msg::Twist cmd;
 
+        // STATE 1: Target reached
         if (distance < pursuit_distance_)
         {
             cmd.linear.x = 0.0;
             cmd.angular.z = 0.0;
             RCLCPP_INFO_THROTTLE(this->get_logger(), *this->get_clock(), 2000,
-                                 "Reached target! Distance: %.2f m", distance);
+                                 "Target reached! Distance: %.3f m", distance);
         }
+        // STATE 2: Need to rotate (not facing target)
+        else if (std::abs(angle_error) > alignment_threshold_)
+        {
+            // Stop and rotate in place
+            cmd.linear.x = 0.0;
+            cmd.angular.z = std::clamp(kp_angular_ * angle_error,
+                                       -max_angular_speed_,
+                                       max_angular_speed_);
+            
+            RCLCPP_INFO_THROTTLE(this->get_logger(), *this->get_clock(), 500,
+                                 "Rotating: error = %.1f deg", angle_error * 180.0 / M_PI);
+        }
+        // STATE 3: Aligned with target - drive straight
         else
         {
-            double speed_factor = std::max(0.1, std::cos(angle_diff));
-            cmd.linear.x = std::min(max_linear_speed_, distance * 0.5 * speed_factor);
-            cmd.angular.z = std::clamp(angle_diff * 2.0, -max_angular_speed_, max_angular_speed_);
-
-            RCLCPP_DEBUG(this->get_logger(),
-                         "Distance: %.2f m, Angle: %.1f deg",
-                         distance, angle_diff * 180.0 / M_PI);
+            // Move forward, allow minor steering corrections
+            cmd.linear.x = max_linear_speed_;
+            cmd.angular.z = std::clamp(kp_angular_ * angle_error * 0.3,
+                                       -0.5, 0.5);
+            
+            RCLCPP_INFO_THROTTLE(this->get_logger(), *this->get_clock(), 500,
+                                 "Driving: distance = %.3f m, heading error = %.1f deg",
+                                 distance, angle_error * 180.0 / M_PI);
         }
 
         cmd_vel_pub_->publish(cmd);
     }
 
+    // Parameters
     int robot_id_;
     int target_id_;
     double pursuit_distance_;
     double max_linear_speed_;
     double max_angular_speed_;
+    double kp_angular_;
+    double alignment_threshold_;
 
-    nav_msgs::msg::Odometry::SharedPtr my_odom_;
-    nav_msgs::msg::Odometry::SharedPtr target_odom_;
+    // State
+    geometry_msgs::msg::PointStamped::SharedPtr my_pos_;
+    geometry_msgs::msg::PointStamped::SharedPtr target_pos_;
+    double my_yaw_ = 0.0;
 
-    rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr my_odom_sub_;
-    rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr target_odom_sub_;
+    // ROS2 interfaces
+    rclcpp::Subscription<geometry_msgs::msg::PointStamped>::SharedPtr my_gps_sub_;
+    rclcpp::Subscription<geometry_msgs::msg::PointStamped>::SharedPtr target_gps_sub_;
+    rclcpp::Subscription<webots_ros2_msgs::msg::FloatStamped>::SharedPtr my_compass_sub_;
     rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_pub_;
     rclcpp::TimerBase::SharedPtr timer_;
 };

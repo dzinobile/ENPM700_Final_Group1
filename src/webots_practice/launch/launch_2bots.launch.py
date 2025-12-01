@@ -33,7 +33,7 @@ from launch.actions import GroupAction
 from launch_ros.actions import PushRosNamespace
 
 def generate_launch_description():
-    num_bots = 10
+    num_bots = 1
 
     package_dir = get_package_share_directory('webots_ros2_turtlebot')
     my_pkg = get_package_share_directory('webots_practice')
@@ -120,7 +120,7 @@ def generate_launch_description():
                 {'robot_description': robot_description_path,
                 'use_sim_time': use_sim_time,
                 'set_robot_state_publisher': True,
-                'update_rate': 50},
+                'update_rate': 10},
                 ros2_control_param
             ],
             remappings=mapping,
@@ -181,7 +181,7 @@ def generate_launch_description():
     return LaunchDescription([
         DeclareLaunchArgument(
             'world',
-            default_value='my_world.wbt',
+            default_value='turtlebot3_burger_example.wbt',
             description='Choose one of the world files from `/webots_ros2_turtlebot/world` directory'
         ),
         DeclareLaunchArgument(

@@ -1,7 +1,7 @@
 #VRML_SIM R2023b utf8
 
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/develop/projects/objects/backgrounds/protos/TexturedBackground.proto"
-EXTERNPROTO "/home/dzinobile/github/3_semester/ENPM700/ENPM700_Final_Group1/src/webots_practice/resource/protos/TurtleBot3Burger.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/develop/projects/robots/robotis/turtlebot/protos/TurtleBot3Burger.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/develop/projects/devices/robotis/protos/RobotisLds01.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/develop/projects/objects/plants/protos/PottedTree.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/develop/projects/objects/floors/protos/Floor.proto"
@@ -28,6 +28,10 @@ EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/develop/projec
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/develop/projects/appearances/protos/RoughPolymer.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/develop/projects/appearances/protos/MattePaint.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/develop/projects/appearances/protos/BrushedAluminium.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/develop/projects/objects/trees/protos/Pine.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/develop/projects/objects/rocks/protos/Rock.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/develop/projects/objects/street_furniture/protos/Fence.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/develop/projects/objects/animals/protos/Sheep.proto" 
 WorldInfo {
   info [
     "Simple TurtleBot3 Burger simulation that can be controlled by a ROS."
@@ -45,208 +49,7 @@ TexturedBackground {
   skybox FALSE
 }
 TurtleBot3Burger {
-  name "robot0"
-  translation 8 0 0
-  controller "<extern>"
-  controllerArgs [
-    ""
-  ]
-  extensionSlot [
-    Solid {
-      name "imu_link"
-    }
-    GPS {
-    }
-    InertialUnit {
-      name "inertial_unit"
-    }
-    RobotisLds01 {
-    }
-  ]
-}
-TurtleBot3Burger {
-  name "robot1"
-  translation 6.36 0 0
-  controller "<extern>"
-  controllerArgs [
-    ""
-  ]
-  extensionSlot [
-    Solid {
-      name "imu_link"
-    }
-    GPS {
-    }
-    InertialUnit {
-      name "inertial_unit"
-    }
-    RobotisLds01 {
-    }
-  ]
-}
-TurtleBot3Burger {
-  name "robot2"
-  translation 6.36 0.2 0
-  controller "<extern>"
-  controllerArgs [
-    ""
-  ]
-  extensionSlot [
-    Solid {
-      name "imu_link"
-    }
-    GPS {
-    }
-    InertialUnit {
-      name "inertial_unit"
-    }
-    RobotisLds01 {
-    }
-  ]
-}
-TurtleBot3Burger {
-  name "robot3"
-  translation 6.36 0.4 0
-  controller "<extern>"
-  controllerArgs [
-    ""
-  ]
-  extensionSlot [
-    Solid {
-      name "imu_link"
-    }
-    GPS {
-    }
-    InertialUnit {
-      name "inertial_unit"
-    }
-    RobotisLds01 {
-    }
-  ]
-}
-TurtleBot3Burger {
-  name "robot4"
-  translation 6.36 0.6 0
-  controller "<extern>"
-  controllerArgs [
-    ""
-  ]
-  extensionSlot [
-    Solid {
-      name "imu_link"
-    }
-    GPS {
-    }
-    InertialUnit {
-      name "inertial_unit"
-    }
-    RobotisLds01 {
-    }
-  ]
-}
-TurtleBot3Burger {
-  name "robot5"
-  translation 6.36 0.8 0
-  controller "<extern>"
-  controllerArgs [
-    ""
-  ]
-  extensionSlot [
-    Solid {
-      name "imu_link"
-    }
-    GPS {
-    }
-    InertialUnit {
-      name "inertial_unit"
-    }
-    RobotisLds01 {
-    }
-  ]
-}
-TurtleBot3Burger {
-  name "robot6"
-  translation 6.36 1.0 0
-  controller "<extern>"
-  controllerArgs [
-    ""
-  ]
-  extensionSlot [
-    Solid {
-      name "imu_link"
-    }
-    GPS {
-    }
-    InertialUnit {
-      name "inertial_unit"
-    }
-    RobotisLds01 {
-    }
-  ]
-}
-TurtleBot3Burger {
-  name "robot7"
-  translation 6.36 1.2 0
-  controller "<extern>"
-  controllerArgs [
-    ""
-  ]
-  extensionSlot [
-    Solid {
-      name "imu_link"
-    }
-    GPS {
-    }
-    InertialUnit {
-      name "inertial_unit"
-    }
-    RobotisLds01 {
-    }
-  ]
-}
-TurtleBot3Burger {
-  name "robot8"
-  translation 6.36 1.4 0
-  controller "<extern>"
-  controllerArgs [
-    ""
-  ]
-  extensionSlot [
-    Solid {
-      name "imu_link"
-    }
-    GPS {
-    }
-    InertialUnit {
-      name "inertial_unit"
-    }
-    RobotisLds01 {
-    }
-  ]
-}
-TurtleBot3Burger {
-  name "robot9"
-  translation 6.36 1.6 0
-  controller "<extern>"
-  controllerArgs [
-    ""
-  ]
-  extensionSlot [
-    Solid {
-      name "imu_link"
-    }
-    GPS {
-    }
-    InertialUnit {
-      name "inertial_unit"
-    }
-    RobotisLds01 {
-    }
-  ]
-}
-TurtleBot3Burger {
-  name "robot10"
-  translation 6.36 1.8 0
+  translation 0 0 0
   controller "<extern>"
   controllerArgs [
     ""
@@ -266,7 +69,7 @@ TurtleBot3Burger {
 }
 
 Floor {
-  translation 7.5 0 0
+  translation 0 0 0
   name "floor(1)"
   size 50 50
   tileSize 2 2
@@ -276,3 +79,26 @@ Floor {
     }
   }
 }
+
+
+Pine {
+  translation 5 5 0
+  rotation 0 0 0 1
+  name "pinetree (1)"
+}
+
+
+
+Sheep {
+  translation -5 5 0
+  rotation 0 0 0 1
+  name "sheep (1)"
+}
+
+Fence {
+  translation 5 -5 0
+  rotation 0 0 0 1
+  name "fence (1)"
+}
+
+
