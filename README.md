@@ -149,14 +149,15 @@ This structure is deliberately generic so that additional robots (multi-robot �
 
 ## UML & TF2 Diagrams
 
-- Activity diagram (pipeline overview):  
-  `![Sheepdog activity diagram](media/Sequence.png)`
+- Activity diagram (pipeline overview):
+  <img src="media/Sequence.png" width="600">
 
-- Class diagram (nodes and their relationships):  
-  `![Sheepdog class diagram](media/ClassDiagram.png)`
 
-- TF2 frame tree diagram:  
-  `![Sheepdog TF2 frame tree](media/frames.png)`
+- Class diagram (nodes and their relationships):
+  <img src="media/ClassDiagram.png" width="1200">  
+
+- TF2 frame tree diagram:
+  <img src="media/frames.png" width="1200">
 
 ---
 
@@ -225,7 +226,7 @@ ENPM700_Final_Group1/
 ├── LICENSE
 ├── do-docs.bash
 ├── do-tests-and-coverage.bash
-├── README.md              # This file (to be replaced with current version)
+├── README.md             
 └── src/
     └── sheepdog/
         ├── CMakeLists.txt
@@ -415,23 +416,6 @@ colcon test-result --verbose
 
 Note: the integration test expects a running Nav2 stack and appropriate simulation or map server configuration. A launch file named `integration_test.launch.yaml` is referenced in CMake as an example and can be configured to start the full stack automatically during CI.
 
----
-
-## Documentation
-
-The script `do-docs.bash` is provided as a convenience to build documentation:
-
-```bash
-./do-docs.bash
-```
-
-The script:
-
-1. Verifies that `pandoc` is installed.
-2. Runs a `colcon build` invocation targeting the `"docs"` CMake target for the `sheepdog` package.
-3. Uses `pandoc` to combine generated Markdown into an HTML index under `src/docs/` (once docs are populated).
-
-This can be extended by adding Doxygen configuration and documentation sources to the package.
 
 ---
 
