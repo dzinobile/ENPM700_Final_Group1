@@ -28,3 +28,8 @@ cd ENPM700_Final_Group1
 colcon build
 source install/setup.bash
 ```
+Confirm the Nav2 navigate_to_pose action server exists
+
+Send one NavigateToPose goal
+
+Verify that the goal returns a result (success or fail — but test expects success)

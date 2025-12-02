@@ -18,6 +18,8 @@ find_package(pluginlib REQUIRED)
 find_package(webots_ros2_msgs REQUIRED)
 find_package(nav2_msgs REQUIRED)
 find_package(rclcpp_action REQUIRED)
+find_package(catch_ros2 REQUIRED)
+find_package(rclcpp_action REQUIRED)
 
 include_directories(include)
 
@@ -61,16 +63,37 @@ install(
   DESTINATION share/${PROJECT_NAME}
 )
 
+# Integration test
 if(BUILD_TESTING)
-  find_package(ament_lint_auto REQUIRED)
-  # the following line skips the linter which checks for copyrights
-  # comment the line when a copyright and license is added to all source files
+  # disable these built-in tests
+  set(ament_cmake_lint_cmake_FOUND TRUE)
   set(ament_cmake_copyright_FOUND TRUE)
-  # the following line skips cpplint (only works in a git repo)
-  # comment the line when this package is in a git repo and when
-  # a copyright and license is added to all source files
   set(ament_cmake_cpplint_FOUND TRUE)
-  ament_lint_auto_find_test_dependencies()
+  set(ament_cmake_flake8_FOUND TRUE)
+  set(ament_cmake_uncrustify_FOUND TRUE)
+
+
+  add_executable(integration_test_node
+    test/integration_test_node.cpp
+    )
+
+  target_link_libraries(integration_test_node
+    catch_ros2::catch_ros2_with_node_main "${cpp_typesupport_target}"
+    )
+  ament_target_dependencies(integration_test_node
+    rclcpp std_msgs rclcpp_action nav2_msgs
+    )
+  install(TARGETS
+    integration_test_node
+    DESTINATION lib/${PROJECT_NAME}
+  )
+
+
+  catch_ros2_add_integration_test (ExampleIntegration_TestYAML
+    LAUNCH_FILE integration_test.launch.yaml  # example in YAML
+    )
+
+
 endif()
 
 ament_package()

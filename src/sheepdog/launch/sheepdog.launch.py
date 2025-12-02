@@ -162,6 +162,12 @@ def generate_launch_description():
             default_value='realtime',
             description='Webots startup mode'
         ),
+        DeclareLaunchArgument(
+            'nav',
+            default_value='true',
+            description='launch with navigation'
+
+        ),
         webots,
         webots._supervisor,
 
