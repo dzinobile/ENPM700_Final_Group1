@@ -20,8 +20,33 @@ find_package(nav2_msgs REQUIRED)
 find_package(rclcpp_action REQUIRED)
 find_package(catch_ros2 REQUIRED)
 find_package(rclcpp_action REQUIRED)
+find_package(sensor_msgs REQUIRED)
+find_package(tf2_geometry_msgs REQUIRED)
+
 
 include_directories(include)
+
+add_executable(sheepdog_node
+  src/main.cpp
+  src/SheepdogNode.cpp
+  src/States.cpp
+  src/ExploreState.cpp
+  src/EncircleState.cpp
+  src/HerdState.cpp)
+ament_target_dependencies(sheepdog_node
+  rclcpp
+  rclcpp_action
+  nav2_msgs
+  sensor_msgs
+  tf2_ros
+  tf2
+  tf2_geometry_msgs)
+target_include_directories(sheepdog_node PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>
+  )
+install(TARGETS sheepdog_node
+  DESTINATION lib/${PROJECT_NAME})
 
 add_executable(sheep_broadcaster src/sheep_broadcaster.cpp)
 ament_target_dependencies(sheep_broadcaster

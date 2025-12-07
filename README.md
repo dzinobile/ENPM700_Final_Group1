@@ -443,3 +443,5 @@ See the `LICENSE` file for full terms.
 ```
 ::contentReference[oaicite:0]{index=0}
 ```
+
+ros2 launch slam_toolbox online_async_launch.py use_sim_time:=true

@@ -46,14 +46,42 @@ class NavGoalSender : public rclcpp::Node {
    * the first goal.
    */
   NavGoalSender() : Node("nav_goal_sender") {
+    // Declare parameters for map bounds
+    this->declare_parameter("map_width", 20.0);   // meters
+    this->declare_parameter("map_height", 20.0);  // meters
+    this->declare_parameter("step_length", 1);
+    this->declare_parameter("step_increment", 1);
+    
+    // Get parameters
+    map_width_ = this->get_parameter("map_width").as_double();
+    map_height_ = this->get_parameter("map_height").as_double();
+    step_length_ = this->get_parameter("step_length").as_int();
+    step_increment_ = this->get_parameter("step_increment").as_int();
+    
+    // Map is centered at origin, so bounds are +/- half width/height
+    map_min_x_ = -map_width_ / 2.0;
+    map_max_x_ = map_width_ / 2.0;
+    map_min_y_ = -map_height_ / 2.0;
+    map_max_y_ = map_height_ / 2.0;
+
     client_ =
         rclcpp_action::create_client<NavigateToPose>(this, "navigate_to_pose");
 
     directions_ = {{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
-    step_length_ = 1;
+    
     x_ = 0;
     y_ = 0;
     count_ = 0;
+
+    RCLCPP_INFO(this->get_logger(), 
+                "NavGoalSender initialized with map bounds:");
+    RCLCPP_INFO(this->get_logger(), 
+                "  X: [%.1f, %.1f] meters", map_min_x_, map_max_x_);
+    RCLCPP_INFO(this->get_logger(), 
+                "  Y: [%.1f, %.1f] meters", map_min_y_, map_max_y_);
+    RCLCPP_INFO(this->get_logger(), 
+                "  step_length: %d, step_increment: %d", 
+                step_length_, step_increment_);
 
     // Kick off once Nav2 is connected
     wait_for_nav2();
@@ -81,6 +109,13 @@ class NavGoalSender : public rclcpp::Node {
   int step_length_;
 
   /**
+   * @brief Amount by which to increment step_length_ after each pair of moves.
+   *
+   * Higher values create wider spacing between spiral loops.
+   */
+  int step_increment_;
+
+  /**
    * @brief Current x position of the goal in the map frame.
    *
    * This is expressed in map coordinates and is updated incrementally.
@@ -104,6 +139,46 @@ class NavGoalSender : public rclcpp::Node {
   int count_;
 
   /**
+   * @brief Known map boundaries (in meters).
+   */
+  double map_width_;
+  double map_height_;
+  double map_min_x_;
+  double map_max_x_;
+  double map_min_y_;
+  double map_max_y_;
+
+  /**
+   * @brief Check if a point is within the known map bounds.
+   * Assumes everything within bounds is free space (optimistic).
+   */
+  bool isPointInBounds(int x, int y) {
+    return (x >= map_min_x_ && x <= map_max_x_ &&
+            y >= map_min_y_ && y <= map_max_y_);
+  }
+
+  /**
+   * @brief Clamp a goal to be within map bounds.
+   * @param x Goal x coordinate (modified in place)
+   * @param y Goal y coordinate (modified in place)
+   */
+  void clampGoalToBounds(int& x, int& y) {
+    int original_x = x;
+    int original_y = y;
+    
+    if (x < map_min_x_) x = static_cast<int>(map_min_x_);
+    if (x > map_max_x_) x = static_cast<int>(map_max_x_);
+    if (y < map_min_y_) y = static_cast<int>(map_min_y_);
+    if (y > map_max_y_) y = static_cast<int>(map_max_y_);
+    
+    if (x != original_x || y != original_y) {
+      RCLCPP_INFO(this->get_logger(), 
+                  "Clamped goal from (%d, %d) to (%d, %d) to stay within bounds",
+                  original_x, original_y, x, y);
+    }
+  }
+
+  /**
    * @brief Wait for the Nav2 NavigateToPose action server and start sending
    * goals.
    *
@@ -118,6 +193,7 @@ class NavGoalSender : public rclcpp::Node {
       rclcpp::shutdown();
       return;
     }
+    RCLCPP_INFO(this->get_logger(), "Nav2 connected. Starting spiral pattern...");
     send_new_goal();
   }
 
@@ -139,14 +215,20 @@ class NavGoalSender : public rclcpp::Node {
     x_ += step_length_ * directions_[mod4][0];
     y_ += step_length_ * directions_[mod4][1];
 
+    // Clamp goal to known map bounds
+    int clamped_x = x_;
+    int clamped_y = y_;
+    clampGoalToBounds(clamped_x, clamped_y);
+
     auto goal_msg = NavigateToPose::Goal();
     goal_msg.pose.header.frame_id = "map";
     goal_msg.pose.header.stamp = now();
-    goal_msg.pose.pose.position.x = x_;
-    goal_msg.pose.pose.position.y = y_;
+    goal_msg.pose.pose.position.x = clamped_x;
+    goal_msg.pose.pose.position.y = clamped_y;
     goal_msg.pose.pose.orientation.w = 1.0;
 
-    RCLCPP_INFO(this->get_logger(), "Sending goal: (%d, %d)", x_, y_);
+    RCLCPP_INFO(this->get_logger(), "Sending goal: (%d, %d), step_length: %d", 
+                clamped_x, clamped_y, step_length_);
 
     auto send_goal_options =
         rclcpp_action::Client<NavigateToPose>::SendGoalOptions();
@@ -164,16 +246,14 @@ class NavGoalSender : public rclcpp::Node {
         [this](const GoalHandleNav::WrappedResult& result) {
           if (result.code == rclcpp_action::ResultCode::SUCCEEDED) {
             RCLCPP_INFO(this->get_logger(), "Goal reached! Sending next...");
-            count_++;
-            step_length_ += count_ % 2;
-            send_new_goal();
           } else {
             RCLCPP_WARN(this->get_logger(),
-                        "Failed to reach goal. Retrying next...");
-            count_++;
-            step_length_ += count_ % 2;
-            send_new_goal();
+                        "Failed to reach goal (code %d). Sending next...",
+                        static_cast<int>(result.code));
           }
+          count_++;
+          step_length_ += (count_ % 2) * step_increment_;
+          send_new_goal();
         };
 
     client_->async_send_goal(goal_msg, send_goal_options);
