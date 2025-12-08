@@ -4,6 +4,13 @@ project(sheepdog)
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
+option(COVERAGE "Enable coverage reporting" OFF)
+
+if(COVERAGE)
+  message(STATUS "Building with coverage flags")
+  add_compile_options(--coverage -O0 -g)
+  add_link_options(--coverage)
+endif()
 
 # ========================
 # Core dependencies (required)
