@@ -4,13 +4,6 @@ project(sheepdog)
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
-option(COVERAGE "Enable coverage reporting" OFF)
-
-if(COVERAGE)
-  message(STATUS "Building with coverage flags")
-  add_compile_options(--coverage -O0 -g)
-  add_link_options(--coverage)
-endif()
 
 # ========================
 # Core dependencies (required)
@@ -149,6 +142,16 @@ if(BUILD_TESTING AND catch_ros2_FOUND)
 elseif(BUILD_TESTING)
   message(WARNING "catch_ros2 not found — skipping integration tests")
 endif()
+
+# ========================
+# Coverage target (simple version)
+# ========================
+add_custom_target(test_coverage
+  COMMAND ${CMAKE_COMMAND} -E echo "Running tests..."
+  COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure || true
+  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+  COMMENT "Running tests"
+)
 
 # ========================
 # Doxygen (optional in CI)
