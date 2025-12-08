@@ -65,12 +65,15 @@ jobs:
           sudo apt install -y doxygen lcov gcovr pandoc
           source /opt/ros/humble/setup.bash
           sudo apt install -y ros-${ROS_DISTRO}-catch-ros2
-          
+      - name: Make scripts executable
+        run: |
+          chmod +x ./do-tests-and-coverage.bash
+          chmod +x ./do-docs.bash
       # Run all unit test, integration test, and generate combined coverage report
       - name: Build, run unit test, and generate coverage report
         run: |
-          ./do-tests-and-coverage.bash
-          ./do-docs.bash
+          bash ./do-tests-and-coverage.bash
+          bash ./do-docs.bash
           cat build/test_coverage_merged.info
 
       # Upload coverage result to CodeCov

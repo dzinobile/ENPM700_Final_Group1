@@ -145,6 +145,8 @@ doxygen_add_docs(docs           # target name
 
 install(PROGRAMS
         scripts/generate_coverage_report.bash
+        do-tests-and-coverage.bash
+        do-docs.bash
         DESTINATION lib/${PROJECT_NAME})
 
 ament_package()
