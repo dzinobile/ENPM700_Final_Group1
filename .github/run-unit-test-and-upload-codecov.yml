@@ -32,9 +32,9 @@
 
 name: Run Unit Test and Upload Coverage Report
 on:
-  # Triggered whenever push to main 
+  # Triggered whenever push to main or phase2
   push:
-    branches: [ "main" ]
+    branches: [ "main", "phase2" ]
 
   # Triggered whenever a pull request is created on main
   pull_request:

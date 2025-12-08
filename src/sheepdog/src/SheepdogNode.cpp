@@ -10,7 +10,7 @@ SheepdogNode::SheepdogNode() : Node("sheepdog_node"),
                                     sheep_detection_radius_(1.0),
                                     distance_to_sheep_(std::numeric_limits<double>::max()),
                                     sheep_detected_(false){
-    this->declare_parameter("sheep_detection_radius", 1.0);
+    this->declare_parameter("sheep_detection_radius", 1.5);
     bool use_sim_time = this->get_parameter_or("use_sim_time", false);
 
     if (!use_sim_time) {
@@ -68,7 +68,6 @@ void SheepdogNode::updateSheepDetection() {
         double dz = transform_stamped.transform.translation.z;
 
         distance_to_sheep_ = std::sqrt(dx*dx + dy*dy + dz*dz);
-        RCLCPP_INFO(this->get_logger(), "distance to sheep %.2f", distance_to_sheep_);
         bool was_detected = sheep_detected_;
         sheep_detected_ = (distance_to_sheep_ <= sheep_detection_radius_);
 

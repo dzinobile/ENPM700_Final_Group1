@@ -19,7 +19,6 @@ class EncircleState: public States {
     void update(SheepdogNode &context) override;
 
     States* transition(SheepdogNode &context) override;
-    void sendEncircleGoal(SheepdogNode &context);
 
     private:
     rclcpp_action::Client<NavigateToPose>::SharedPtr nav_client_;
@@ -31,7 +30,7 @@ class EncircleState: public States {
     double offset_distance_;
 
     void initializeNavClient(SheepdogNode &context);
-
+    void sendEncircleGoal(SheepdogNode &context);
     void goalResponseCallback(const GoalHandleNav::SharedPtr& goal_handle);
     void goalResultCallback(const GoalHandleNav::WrappedResult& result);    
 

@@ -22,6 +22,7 @@ find_package(catch_ros2 REQUIRED)
 find_package(rclcpp_action REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
+find_package(Doxygen REQUIRED)
 
 
 include_directories(include)
@@ -32,7 +33,8 @@ add_executable(sheepdog_node
   src/States.cpp
   src/ExploreState.cpp
   src/EncircleState.cpp
-  src/HerdState.cpp)
+  src/HerdState.cpp
+  src/DoneState.cpp)
 ament_target_dependencies(sheepdog_node
   rclcpp
   rclcpp_action
@@ -60,26 +62,6 @@ install(TARGETS
   DESTINATION lib/${PROJECT_NAME}
 )
 
-add_executable(sheep_nav_trigger src/sheep_nav_trigger.cpp)
-ament_target_dependencies(sheep_nav_trigger
-  rclcpp
-  rclcpp_action
-  geometry_msgs
-  tf2
-  tf2_ros
-  tf2_geometry_msgs
-  nav2_msgs
-)
-
-install(TARGETS
-  sheep_nav_trigger
-  DESTINATION lib/${PROJECT_NAME}
-)
-
-add_executable(nav_goal_sender src/nav_goal_sender.cpp)
-ament_target_dependencies(nav_goal_sender rclcpp geometry_msgs nav2_msgs rclcpp_action)
-install(TARGETS nav_goal_sender DESTINATION lib/${PROJECT_NAME})
-
 ament_export_include_directories(
   include
 )
@@ -106,7 +88,7 @@ if(BUILD_TESTING)
     catch_ros2::catch_ros2_with_node_main "${cpp_typesupport_target}"
     )
   ament_target_dependencies(integration_test_node
-    rclcpp std_msgs rclcpp_action nav2_msgs
+    rclcpp std_msgs rclcpp_action nav2_msgs tf2_ros geometry_msgs
     )
   install(TARGETS
     integration_test_node
@@ -120,5 +102,49 @@ if(BUILD_TESTING)
 
 
 endif()
+###################################################
+# Doxygen Rules
+# ref: https://cmake.org/cmake/help/latest/module/FindDoxygen.html
+###################################################
+if (DOXYGEN_FOUND)
+  set( DOXYGEN_OUTPUT_DIRECTORY     ${PROJECT_SOURCE_DIR}/docs )
+  set( DOXYGEN_COLLABORATION_GRAPH  YES )
+  set( DOXYGEN_EXTRACT_ALL          YES )
+  set( DOXYGEN_CLASS_DIAGRAMS       YES )
+  set( DOXYGEN_HIDE_UNDOC_RELATIONS NO )
+  set( DOXYGEN_HAVE_DOT             YES )
+  set( DOXYGEN_CLASS_GRAPH          YES )
+  set( DOXYGEN_CALL_GRAPH           YES )
+  set( DOXYGEN_CALLER_GRAPH         YES )
+  set( DOXYGEN_COLLABORATION_GRAPH  YES )
+  set( DOXYGEN_BUILTIN_STL_SUPPORT  YES )
+  set( DOXYGEN_EXTRACT_PRIVATE      YES )
+  set( DOXYGEN_EXTRACT_PACKAGE      YES )
+  set( DOXYGEN_EXTRACT_STATIC       YES )
+  set( DOXYGEN_EXTRACT_LOCALMETHODS YES )
+  set( DOXYGEN_UML_LOOK             YES )
+  set( DOXYGEN_UML_LIMIT_NUM_FIELDS 50 )
+  set( DOXYGEN_TEMPLATE_RELATIONS   YES )
+  set( DOXYGEN_DOT_GRAPH_MAX_NODES  100 )
+  set( DOXYGEN_MAX_DOT_GRAPH_DEPTH  0 )
+  set( DOXYGEN_DOT_TRANSPARENT      YES )
+else()
+  message( FATAL_ERROR "Doxygen needs to be installed to generate the doxygen documentation" )
+endif()
+
+###################################
+# Specify Targets
+###################################
+# create a target to build documentation
+doxygen_add_docs(docs           # target name
+  # List of files or directories
+  ${PROJECT_SOURCE_DIR}/src
+  ${PROJECT_SOURCE_DIR}/include
+  ${PROJECT_SOURCE_DIR}/test)
+
+
+install(PROGRAMS
+        scripts/generate_coverage_report.bash
+        DESTINATION lib/${PROJECT_NAME})
 
 ament_package()

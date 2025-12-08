@@ -28,6 +28,7 @@ class SheepdogNode : public rclcpp::Node {
     }
     std::shared_ptr<tf2_ros::Buffer> tf_buffer_;
     std::shared_ptr<tf2_ros::TransformListener> tf_listener_;
+    
     private:
     std::unique_ptr<States> currentState_;
     rclcpp::TimerBase::SharedPtr timer_;

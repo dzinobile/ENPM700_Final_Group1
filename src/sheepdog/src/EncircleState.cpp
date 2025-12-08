@@ -105,3 +105,4 @@ void EncircleState::goalResultCallback(
             goal_reached_ = false;
         }
     }
+
