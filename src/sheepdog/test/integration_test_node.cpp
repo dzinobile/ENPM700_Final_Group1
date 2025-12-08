@@ -84,93 +84,93 @@ TEST_CASE_METHOD(SheepBroadcasterTestFixture,
     CHECK(transform.transform.translation.z == Catch::Approx(0.0).epsilon(0.01));
 }
 
-// TEST_CASE_METHOD(SheepBroadcasterTestFixture,
-//                  "Test sheep broadcaster publishes map->pen transform",
-//                  "[tf_broadcast]") {
-//     RCLCPP_INFO(Logger, "Waiting for map->pen transform...");
+TEST_CASE_METHOD(SheepBroadcasterTestFixture,
+                 "Test sheep broadcaster publishes map->pen transform",
+                 "[tf_broadcast]") {
+    RCLCPP_INFO(Logger, "Waiting for map->pen transform...");
     
-//     rclcpp::sleep_for(std::chrono::seconds(1));
+    rclcpp::sleep_for(std::chrono::seconds(1));
     
-//     bool transform_received = false;
-//     geometry_msgs::msg::TransformStamped transform;
+    bool transform_received = false;
+    geometry_msgs::msg::TransformStamped transform;
     
-//     auto start_time = std::chrono::steady_clock::now();
-//     auto timeout = std::chrono::duration<double>(TEST_DURATION);
+    auto start_time = std::chrono::steady_clock::now();
+    auto timeout = std::chrono::duration<double>(TEST_DURATION);
     
-//     while (std::chrono::steady_clock::now() - start_time < timeout) {
-//         try {
-//             transform = tf_buffer_->lookupTransform(
-//                 "map", 
-//                 "pen", 
-//                 tf2::TimePointZero
-//             );
-//             transform_received = true;
-//             RCLCPP_INFO(Logger, "Pen transform received!");
-//             break;
-//         } catch (tf2::TransformException &ex) {
-//             rclcpp::spin_some(testerNode);
-//             rclcpp::sleep_for(100ms);
-//         }
-//     }
+    while (std::chrono::steady_clock::now() - start_time < timeout) {
+        try {
+            transform = tf_buffer_->lookupTransform(
+                "map", 
+                "pen", 
+                tf2::TimePointZero
+            );
+            transform_received = true;
+            RCLCPP_INFO(Logger, "Pen transform received!");
+            break;
+        } catch (tf2::TransformException &ex) {
+            rclcpp::spin_some(testerNode);
+            rclcpp::sleep_for(100ms);
+        }
+    }
     
-//     REQUIRE(transform_received);
-    
-
-//     CHECK(transform.transform.translation.x == Catch::Approx(0.0).epsilon(0.01));
-//     CHECK(transform.transform.translation.y == Catch::Approx(0.0).epsilon(0.01));
-//     CHECK(transform.transform.translation.z == Catch::Approx(0.0).epsilon(0.01));
-// }
-
-// TEST_CASE_METHOD(SheepBroadcasterTestFixture,
-//                  "Test base_link->sheep transform can be computed",
-//                  "[tf_integration]") {
-//     RCLCPP_INFO(Logger, "Testing base_link->sheep transform lookup...");
+    REQUIRE(transform_received);
     
 
-//     rclcpp::sleep_for(std::chrono::seconds(2));
-    
-//     bool transform_received = false;
-//     geometry_msgs::msg::TransformStamped transform;
-//     double distance_to_sheep = 0.0;
-    
-//     auto start_time = std::chrono::steady_clock::now();
-//     auto timeout = std::chrono::duration<double>(TEST_DURATION);
+    CHECK(transform.transform.translation.x == Catch::Approx(0.0).epsilon(0.01));
+    CHECK(transform.transform.translation.y == Catch::Approx(0.0).epsilon(0.01));
+    CHECK(transform.transform.translation.z == Catch::Approx(0.0).epsilon(0.01));
+}
+
+TEST_CASE_METHOD(SheepBroadcasterTestFixture,
+                 "Test base_link->sheep transform can be computed",
+                 "[tf_integration]") {
+    RCLCPP_INFO(Logger, "Testing base_link->sheep transform lookup...");
     
 
-//     while (std::chrono::steady_clock::now() - start_time < timeout) {
-//         try {
-//             transform = tf_buffer_->lookupTransform(
-//                 "base_link", 
-//                 "sheep", 
-//                 tf2::TimePointZero
-//             );
+    rclcpp::sleep_for(std::chrono::seconds(2));
+    
+    bool transform_received = false;
+    geometry_msgs::msg::TransformStamped transform;
+    double distance_to_sheep = 0.0;
+    
+    auto start_time = std::chrono::steady_clock::now();
+    auto timeout = std::chrono::duration<double>(TEST_DURATION);
+    
+
+    while (std::chrono::steady_clock::now() - start_time < timeout) {
+        try {
+            transform = tf_buffer_->lookupTransform(
+                "base_link", 
+                "sheep", 
+                tf2::TimePointZero
+            );
             
-//             double dx = transform.transform.translation.x;
-//             double dy = transform.transform.translation.y;
-//             double dz = transform.transform.translation.z;
-//             distance_to_sheep = std::sqrt(dx*dx + dy*dy + dz*dz);
+            double dx = transform.transform.translation.x;
+            double dy = transform.transform.translation.y;
+            double dz = transform.transform.translation.z;
+            distance_to_sheep = std::sqrt(dx*dx + dy*dy + dz*dz);
             
-//             transform_received = true;
-//             RCLCPP_INFO(Logger, "base_link->sheep transform received! Distance: %.2f meters",
-//                         distance_to_sheep);
-//             break;
-//         } catch (tf2::TransformException &ex) {
-//             rclcpp::spin_some(testerNode);
-//             rclcpp::sleep_for(100ms);
-//         }
-//     }
+            transform_received = true;
+            RCLCPP_INFO(Logger, "base_link->sheep transform received! Distance: %.2f meters",
+                        distance_to_sheep);
+            break;
+        } catch (tf2::TransformException &ex) {
+            rclcpp::spin_some(testerNode);
+            rclcpp::sleep_for(100ms);
+        }
+    }
     
 
-//     if (transform_received) {
-//         RCLCPP_INFO(Logger, "Successfully computed distance to sheep: %.2f meters", 
-//                     distance_to_sheep);
-//         CHECK(distance_to_sheep >= 0.0);
-//     } else {
-//         RCLCPP_WARN(Logger, "base_link->sheep transform not available. "
-//                             "This is expected if TurtleBot isn't running.");
+    if (transform_received) {
+        RCLCPP_INFO(Logger, "Successfully computed distance to sheep: %.2f meters", 
+                    distance_to_sheep);
+        CHECK(distance_to_sheep >= 0.0);
+    } else {
+        RCLCPP_WARN(Logger, "base_link->sheep transform not available. "
+                            "This is expected if TurtleBot isn't running.");
 
-//     }
-// }
+    }
+}
 
 // TEST_CASE_METHOD(SheepBroadcasterTestFixture,
 //                  "Test transform broadcast rate is approximately 10Hz",
