@@ -64,7 +64,11 @@ jobs:
           sudo apt update
           sudo apt install -y doxygen lcov gcovr pandoc
           source /opt/ros/humble/setup.bash
-          sudo apt install -y ros-${ROS_DISTRO}-catch-ros2
+          sudo apt install -y ros-${ROS_DISTRO}-catch-ros2 \
+          ros-humble-nav2-msgs \
+          ros-humble-rclcpp \
+          ros-humble-tf2-ros
+
       - name: Make scripts executable
         run: |
           chmod +x ./do-tests-and-coverage.bash
