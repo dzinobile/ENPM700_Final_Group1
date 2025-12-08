@@ -11,6 +11,11 @@ SheepdogNode::SheepdogNode() : Node("sheepdog_node"),
                                     distance_to_sheep_(std::numeric_limits<double>::max()),
                                     sheep_detected_(false){
     this->declare_parameter("sheep_detection_radius", 1.0);
+    bool use_sim_time = this->get_parameter_or("use_sim_time", false);
+
+    if (!use_sim_time) {
+      this->set_parameter(rclcpp::Parameter("use_sim_time", true));
+    }
     sheep_detection_radius_ = this->get_parameter("sheep_detection_radius").as_double();
 
     tf_buffer_ = std::make_shared<tf2_ros::Buffer>(this->get_clock());
@@ -25,9 +30,9 @@ SheepdogNode::SheepdogNode() : Node("sheepdog_node"),
     RCLCPP_INFO(this->get_logger(), "sheepdogNode initialized in EXPLORE state");
 }
 
-//bool SheepdogNode::sheepDetected() const {return false;}
 
 void SheepdogNode::updateCallback() {
+    updateSheepDetection();
     if (currentState_) {
         currentState_->update(*this);
 
@@ -63,7 +68,7 @@ void SheepdogNode::updateSheepDetection() {
         double dz = transform_stamped.transform.translation.z;
 
         distance_to_sheep_ = std::sqrt(dx*dx + dy*dy + dz*dz);
-
+        RCLCPP_INFO(this->get_logger(), "distance to sheep %.2f", distance_to_sheep_);
         bool was_detected = sheep_detected_;
         sheep_detected_ = (distance_to_sheep_ <= sheep_detection_radius_);
 

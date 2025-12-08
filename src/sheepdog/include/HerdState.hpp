@@ -5,6 +5,7 @@
 class SheepdogNode;
 
 class HerdState: public States {
+    public:
     HerdState();
     ~HerdState() override;
 

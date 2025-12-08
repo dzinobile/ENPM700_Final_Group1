@@ -19,21 +19,22 @@ class SheepdogNode : public rclcpp::Node {
 
     void run();
     void changeState(States* newState);
-    bool sheepDetected() const {return distance_to_sheep_;}
-    // double getDistanceToSheep();
+    bool sheepDetected() const {return sheep_detected_;}
+    double getDistanceToSheep() const {return distance_to_sheep_;}
 
 
     States* getCurrentState() const {
         return currentState_.get();
     }
-
+    std::shared_ptr<tf2_ros::Buffer> tf_buffer_;
+    std::shared_ptr<tf2_ros::TransformListener> tf_listener_;
     private:
     std::unique_ptr<States> currentState_;
     rclcpp::TimerBase::SharedPtr timer_;
     double sheep_detection_radius_;
     double distance_to_sheep_;
-    std::shared_ptr<tf2_ros::Buffer> tf_buffer_;
-    std::shared_ptr<tf2_ros::TransformListener> tf_listener_;
+
+
     bool sheep_detected_;
     void updateSheepDetection();
     void updateCallback();
