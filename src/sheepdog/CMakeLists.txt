@@ -5,6 +5,14 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
+option(CODE_COVERAGE "Enable coverage reporting" OFF)
+
+if(CODE_COVERAGE AND CMAKE_COMPILER_IS_GNUCXX)
+  message(STATUS "Building with coverage instrumentation")
+  add_compile_options(--coverage -fprofile-arcs -ftest-arcs)
+  add_link_options(--coverage)
+endif()
+
 # ========================
 # Core dependencies (required)
 # ========================
@@ -143,15 +151,21 @@ elseif(BUILD_TESTING)
   message(WARNING "catch_ros2 not found — skipping integration tests")
 endif()
 
-# ========================
-# Coverage target (simple version)
-# ========================
-add_custom_target(test_coverage
-  COMMAND ${CMAKE_COMMAND} -E echo "Running tests..."
-  COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure || true
-  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-  COMMENT "Running tests"
-)
+if(CODE_COVERAGE)
+  add_custom_target(test_coverage
+    COMMAND ${CMAKE_COMMAND} -E echo "Running tests with coverage..."
+    COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+    COMMENT "Running tests and generating .gcda files for coverage"
+  )
+else()
+  add_custom_target(test_coverage
+    COMMAND ${CMAKE_COMMAND} -E echo "Running tests without coverage..."
+    COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure || true
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+    COMMENT "Running tests (build with -DCODE_COVERAGE=ON for coverage reporting)"
+  )
+endif()
 
 # ========================
 # Doxygen (optional in CI)
