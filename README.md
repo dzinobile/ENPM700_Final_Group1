@@ -1,4 +1,4 @@
-# Final Project Phase 1
+# Final Project Phase 2
 [![CICD Workflow status](https://github.com/dzinobile/ENPM700_Final_Group1/actions/workflows/run-unit-test-and-upload-codecov.yml/badge.svg)](https://github.com/dzinobile/ENPM700_Final_Group1/actions/workflows/run-unit-test-and-upload-codecov.yml)
 
 [![codecov](https://codecov.io/gh/dzinobile/ENPM700_Final_Group1/graph/badge.svg?token=swo8nEary3)](https://codecov.io/gh/dzinobile/ENPM700_Final_Group1)
@@ -10,11 +10,19 @@ https://docs.google.com/spreadsheets/d/12TAMyx9cW5lwyse37VmfeIvLcLHgc6YgxtjMCqo1
 # Objectives
 Our objective for phase 1 was originally to create proof of concept simulations in Webots demonstrating multi-robot SLAM and the ability to encircle a target, using the turtlebot3 with its built in navigation stack. We would then create the general structure of our final package and beginning filling in the functionality. 
 
-However, we experienced difficulties with launching a full navigation stack for each separate turtlebot. We have adjusted the scope of this phase to instead focus on creating a functional SLAM search with 1 turtlebot3 in a custom environment, with the hope that this will be applicable to a multi-robot simulation in phase 2. 
+However, we experienced difficulties with launching a full navigation stack for each separate turtlebot. We instead split our efforts, with Anvesh focusing on created multi-robot SLAM with a custom robot, and Daniel focusing on implementing the EXPLORE, ENCIRCLE, HERD, and DONE states on a turtlebot3 in a custom environment. These separate goals were achieved. The objective was to eventually unite these separate efforts by applying Daniel's code to the custom robot simulation, however this was not feasible in the given time. 
 
-# Sheepdog – Webots + ROS 2 Navigation (Phase 1)
+# Sheepdog – Webots + ROS 2 Navigation
 
-Single-robot “sheepdog” prototype: a TurtleBot3 Burger in Webots explores a world with Nav2, tracks a virtual sheep frame using TF2, and when the robot is close enough, it sends a navigation goal directly to the sheep and saves the current map. This phase is structured as a foundation for a future multi-robot herding swarm.
+Single-robot “sheepdog” prototype: a TurtleBot3 Burger in Webots initializes in the EXPLORE state, during which it conducts a spiral search of the custom world while building a map with SLAM. A virtual sheep broadcasts its position using TF2. 
+
+When the robot comes within a certain distance of the sheep, it "detects" the sheep and switches to the ENCIRCLE state. During this state, it navigates to a new target an offset distance away from the sheep. For multiple robots, this offset x and y distance would vary so that the robots end up encircling the sheep. 
+
+When the robot reaches its target in the ENCIRCLE state, it switches to the HERD state. During this state, the robot moves back an offset distance from the location of the sheep pen, which in our world example is at the origin. This location is also broadcast by the same TF broadcaster that broadcasts the sheep virtual location. The offest distance from this location is equal to the offset distance from the sheep, so for multiple bots this would result in them moving as a unit, retaining the circular shape while the sheep would move with them. 
+
+When the robot reaches its target in the HERD state, it switches to the DONE state. This is a dummy state that does not command the robot to do anything. 
+
+# Multi_Robot - Webots + multi-robot SLAM 
 
 ---
 ## Contents

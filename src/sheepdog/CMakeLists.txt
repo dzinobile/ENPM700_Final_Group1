@@ -53,25 +53,51 @@ endif()
 include_directories(include)
 
 # ========================
-# Main node
+# Core library
 # ========================
-add_executable(sheepdog_node
-  src/main.cpp
+add_library(sheepdog_core
   src/SheepdogNode.cpp
   src/States.cpp
   src/ExploreState.cpp
   src/EncircleState.cpp
   src/HerdState.cpp
-  src/DoneState.cpp)
+  src/DoneState.cpp
+)
 
-ament_target_dependencies(sheepdog_node
+ament_target_dependencies(sheepdog_core
   rclcpp
   rclcpp_action
   nav2_msgs
   sensor_msgs
   tf2_ros
   tf2
-  tf2_geometry_msgs)
+  tf2_geometry_msgs
+  geometry_msgs
+)
+
+target_include_directories(sheepdog_core PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>
+)
+
+
+
+# ========================
+# Main node
+# ========================
+add_executable(sheepdog_node
+  src/main.cpp)
+
+target_link_libraries(sheepdog_node sheepdog_core)
+
+# ament_target_dependencies(sheepdog_node
+#   rclcpp
+#   rclcpp_action
+#   nav2_msgs
+#   sensor_msgs
+#   tf2_ros
+#   tf2
+#   tf2_geometry_msgs)
 
 # Only link Webots if present
 if(webots_ros2_driver_FOUND)
@@ -81,10 +107,10 @@ if(webots_ros2_driver_FOUND)
   )
 endif()
 
-target_include_directories(sheepdog_node PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<INSTALL_INTERFACE:include>
-)
+# target_include_directories(sheepdog_node PUBLIC
+#   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+#   $<INSTALL_INTERFACE:include>
+# )
 
 install(TARGETS sheepdog_node
   DESTINATION lib/${PROJECT_NAME})
@@ -100,10 +126,12 @@ ament_target_dependencies(sheep_broadcaster
   geometry_msgs
 )
 
+
 install(TARGETS
   sheep_broadcaster
   DESTINATION lib/${PROJECT_NAME}
 )
+
 
 # ========================
 # Resource install
@@ -132,6 +160,7 @@ if(BUILD_TESTING AND catch_ros2_FOUND)
   )
 
   target_link_libraries(integration_test_node
+    sheepdog_core
     catch_ros2::catch_ros2_with_node_main "${cpp_typesupport_target}"
   )
 

@@ -30,7 +30,7 @@ using namespace std::chrono_literals;
  * other nodes to reason about the relative position of the sheep.
  */
 class MapToSheepBroadcaster : public rclcpp::Node {
- public:
+public:
   /**
    * @brief Construct a new MapToSheepBroadcaster node.
    *
@@ -45,7 +45,6 @@ class MapToSheepBroadcaster : public rclcpp::Node {
       this->set_parameter(rclcpp::Parameter("use_sim_time", true));
     }
 
-    
     // Create a TransformBroadcaster object
     tf_broadcaster_ = std::make_shared<tf2_ros::TransformBroadcaster>(this);
 
@@ -54,7 +53,7 @@ class MapToSheepBroadcaster : public rclcpp::Node {
         100ms, std::bind(&MapToSheepBroadcaster::on_timer, this));
   }
 
- private:
+private:
   /**
    * @brief Timer callback that publishes the map-to-sheep transform.
    *
@@ -69,8 +68,8 @@ class MapToSheepBroadcaster : public rclcpp::Node {
 
     // Timestamp and frame ids
     sheep_tf_msg.header.stamp = this->get_clock()->now();
-    sheep_tf_msg.header.frame_id = "map";   ///< Parent frame.
-    sheep_tf_msg.child_frame_id = "sheep";  ///< Child frame.
+    sheep_tf_msg.header.frame_id = "map";  ///< Parent frame.
+    sheep_tf_msg.child_frame_id = "sheep"; ///< Child frame.
 
     // Example translation (change as needed)
     sheep_tf_msg.transform.translation.x = -4.0;
@@ -86,7 +85,6 @@ class MapToSheepBroadcaster : public rclcpp::Node {
     sheep_tf_msg.transform.rotation.y = q.y();
     sheep_tf_msg.transform.rotation.z = q.z();
     sheep_tf_msg.transform.rotation.w = q.w();
-
 
     pen_tf_msg.header.stamp = this->get_clock()->now();
     pen_tf_msg.header.frame_id = "map";
@@ -127,7 +125,7 @@ class MapToSheepBroadcaster : public rclcpp::Node {
  * @param argv Array of command-line argument strings.
  * @return int Exit code (0 on normal shutdown).
  */
-int main(int argc, char* argv[]) {
+int main(int argc, char *argv[]) {
   rclcpp::init(argc, argv);
   auto node = std::make_shared<MapToSheepBroadcaster>();
   rclcpp::spin(node);
