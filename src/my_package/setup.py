@@ -29,6 +29,7 @@ setup(
     entry_points={
         'console_scripts': [
             'my_robot_driver = my_package.my_robot_driver:main',
-        ],
+            'global_map_tf_publisher = my_package.global_map_tf_publisher:main'
+            ],
     },
 )
