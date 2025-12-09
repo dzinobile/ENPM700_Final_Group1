@@ -13,7 +13,7 @@ https://docs.google.com/document/d/1ttXld3m7X96wpw3BS0YS7ocnr8JOInaBjeMcxNIiW9o/
 # Objectives
 Our objective for phase 1 was originally to create proof of concept simulations in Webots demonstrating multi-robot SLAM and the ability to encircle a target, using the turtlebot3 with its built in navigation stack. We would then create the general structure of our final package and beginning filling in the functionality. 
 
-However, we experienced difficulties with launching a full navigation stack for each separate turtlebot. We instead split our efforts, with Anvesh focusing on created multi-robot SLAM with a custom robot, and Daniel focusing on implementing the EXPLORE, ENCIRCLE, HERD, and DONE states on a turtlebot3 in a custom environment. These separate goals were achieved. The objective was to eventually unite these separate efforts by applying Daniel's code to the custom robot simulation, however this was not feasible in the given time. 
+However, we experienced difficulties with launching a full navigation stack for each separate turtlebot. We instead split our efforts, with Anvesh focusing on created multi-robot SLAM and Navigation with a custom robots, and Daniel focusing on implementing the EXPLORE, ENCIRCLE, HERD, and DONE states on a turtlebot3 in a custom environment. These separate goals were achieved. The objective was to eventually unite these separate efforts by applying Daniel's code to the custom robot simulation, however this was not feasible in the given time. 
 
 # Sheepdog – Webots + ROS 2 Navigation
 
@@ -170,12 +170,20 @@ End-to-end behavior:
 - Class Inheritance:
   <img src="src/sheepdog/docs/html/classStates__inherit__graph.png" width="600">
 
-- TF2 frame tree diagram:
+- TF2 frame tree diagram of connecting local maps:
+  <img src="media/multiRobotMapping.png" width="1200">
+
+  - TF2 frame tree diagram:
   <img src="media/frames-1.png" width="1200">
 
  - Additional details at `src/sheepdog/docs/html/index.html`
 
 ---
+
+## Multi Robot Mapping
+
+- RviZ Visualization for multi Robot Mapping:
+  <img src="media/multiRobotViz.png" width="1200">
 
 ## ROS 2 Interfaces
 
@@ -375,20 +383,11 @@ In a third terminal:
 cd ~/sheepdog_ws
 source install/setup.bash
 
-ros2 run sheepdog nav_goal_sender
+ros2 run sheepdog sheepdog_node
 ```
 
 The robot begins to receive a sequence of `NavigateToPose` goals and explores the map in a growing spiral centered at the origin of the map frame.
 
-### 4. Sheep proximity trigger + map saving
-
-In a fourth terminal:
-
-```bash
-cd ~/sheepdog_ws
-source install/setup.bash
-
-ros2 run sheepdog sheep_nav_trigger
 ```
 
 Behavior:
@@ -432,22 +431,6 @@ colcon test-result --verbose
 
 Note: the integration test expects a running Nav2 stack and appropriate simulation or map server configuration. A launch file named `integration_test.launch.yaml` is referenced in CMake as an example and can be configured to start the full stack automatically during CI.
 
-
----
-
-## Future Extensions
-
-The current design is intended as Phase 1 of a larger project:
-
-* **Multi-robot extension:**
-  Multiple TurtleBot3 “sheepdogs,” each with its own namespace, `nav_goal_sender`, and `sheep_nav_trigger`.
-* **Dynamic sheep models:**
-  Replace static TF broadcasting with a simulated moving sheep in Webots, with pose updates broadcast from a Webots controller.
-* **Herding strategies:**
-  Use behavior trees or explicit finite-state machines for herding, surrounding, and guiding the sheep toward target regions.
-* **Richer testing:**
-  Add more integration tests combining SLAM, multi-robot coordination, and robustness to sensing or TF delays.
-
 ---
 
 ## License
@@ -455,8 +438,4 @@ The current design is intended as Phase 1 of a larger project:
 This project is licensed under the **Apache License 2.0**.
 
 See the `LICENSE` file for full terms.
-
-```
-::contentReference[oaicite:0]{index=0}
-```
 
