@@ -1,0 +1,8 @@
+<map id="src/sheepdog/include/HerdState.hpp" name="src/sheepdog/include/HerdState.hpp">
+<area shape="rect" id="node1" title="Node for Herd state. This state activates when the robot has positioned itself to encircle the sheep...." alt="" coords="249,5,407,47"/>
+<area shape="rect" id="node2" href="$States_8hpp.html" title="Header file for State Interface class." alt="" coords="5,102,96,129"/>
+<area shape="rect" id="node4" title=" " alt="" coords="120,95,315,136"/>
+<area shape="rect" id="node5" title=" " alt="" coords="339,95,541,136"/>
+<area shape="rect" id="node6" title=" " alt="" coords="565,95,715,136"/>
+<area shape="rect" id="node3" title=" " alt="" coords="12,184,89,211"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="DoneState" name="DoneState">
+<area shape="rect" id="node1" title="Dummy state for when all other states have achieved their goals." alt="" coords="5,175,132,296"/>
+<area shape="rect" id="node2" href="$classStates.html" title="Abstract state interface class for robot states Defines common interface used by all states in the st..." alt="" coords="14,5,123,127"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="ExploreState" name="ExploreState">
+<area shape="rect" id="node1" title="State in which the robot explores the environment in a sprial pattern while searching for the sheep." alt="" coords="5,175,193,619"/>
+<area shape="rect" id="node2" href="$classStates.html" title="Abstract state interface class for robot states Defines common interface used by all states in the st..." alt="" coords="45,5,154,127"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="HerdState::initializeNavClient" name="HerdState::initializeNavClient">
+<area shape="rect" id="node1" title="Function to initialize a navigation client." alt="" coords="193,5,371,47"/>
+<area shape="rect" id="node2" href="$classHerdState.html#a160e16515d6c278c7aae49d2e3ae222a" title="Inherited update function to activate behaviors for current state." alt="" coords="5,13,145,39"/>
+</map>

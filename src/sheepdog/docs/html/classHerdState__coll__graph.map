@@ -1,0 +1,8 @@
+<map id="HerdState" name="HerdState">
+<area shape="rect" id="node1" title="State in which the robots travel back to the pen while encircling the sheep. This state activates onc..." alt="" coords="230,219,418,399"/>
+<area shape="rect" id="node2" href="$classStates.html" title="Abstract state interface class for robot states Defines common interface used by all states in the st..." alt="" coords="5,5,115,127"/>
+<area shape="rect" id="node3" title=" " alt="" coords="139,27,205,105"/>
+<area shape="rect" id="node4" title=" " alt="" coords="229,20,432,112"/>
+<area shape="rect" id="node5" title=" " alt="" coords="471,27,521,105"/>
+<area shape="rect" id="node6" title=" " alt="" coords="588,27,673,105"/>
+</map>

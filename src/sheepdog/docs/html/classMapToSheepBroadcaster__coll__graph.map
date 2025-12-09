@@ -1,0 +1,8 @@
+<map id="MapToSheepBroadcaster" name="MapToSheepBroadcaster">
+<area shape="rect" id="node1" title="ROS 2 node that periodically broadcasts a TF transform from &quot;map&quot; to &quot;sheep&quot;." alt="" coords="136,440,343,532"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,293,108,370"/>
+<area shape="rect" id="node3" title=" " alt="" coords="132,285,347,377"/>
+<area shape="rect" id="node4" title=" " alt="" coords="161,145,318,223"/>
+<area shape="rect" id="node5" title=" " alt="" coords="220,5,259,83"/>
+<area shape="rect" id="node6" title=" " alt="" coords="371,293,457,370"/>
+</map>

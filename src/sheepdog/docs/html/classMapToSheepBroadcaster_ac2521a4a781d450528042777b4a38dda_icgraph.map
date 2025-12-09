@@ -1,0 +1,4 @@
+<map id="MapToSheepBroadcaster::on_timer" name="MapToSheepBroadcaster::on_timer">
+<area shape="rect" id="node1" title="Timer callback that publishes the map&#45;to&#45;sheep transform." alt="" coords="244,5,427,47"/>
+<area shape="rect" id="node2" href="$classMapToSheepBroadcaster.html#a3beb3a66af838eb1d8bfb5546ca6358d" title="Construct a new MapToSheepBroadcaster node." alt="" coords="5,5,196,47"/>
+</map>

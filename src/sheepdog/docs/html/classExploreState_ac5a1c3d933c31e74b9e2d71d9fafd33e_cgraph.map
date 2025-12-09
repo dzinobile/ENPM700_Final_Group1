@@ -1,0 +1,4 @@
+<map id="ExploreState::transition" name="ExploreState::transition">
+<area shape="rect" id="node1" title="Inherited transition function to change state based on current conditions." alt="" coords="5,5,180,32"/>
+<area shape="rect" id="node2" href="$classSheepdogNode.html#adec5ab7f80f9d27798ae8e64d43e4031" title="getter for sheep detected boolean value" alt="" coords="228,5,455,32"/>
+</map>
