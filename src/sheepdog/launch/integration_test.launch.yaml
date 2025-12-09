@@ -1,0 +1,57 @@
+launch:
+################################################
+# 1.) tag: catch2_launch_file  (required)
+################################################
+- catch2_launch_file:
+    description: 'Sheep broadcaster and SheepdogNode integration test'
+
+################################################
+# 2.) launch arguments
+################################################
+- arg:
+    name: 'test_duration'
+    default: '10.0'
+    description: 'Max length of test in seconds.'
+
+- arg:
+    name: 'use_sim_time'
+    default: 'true'
+    description: 'Use simulation time'
+
+################################################
+# 3.) Auxiliary nodes (i.e, nodes under test)
+################################################
+# Start sheep_broadcaster node
+- node:
+    pkg: "sheepdog"
+    exec: "sheep_broadcaster"
+    name: "sheep_broadcaster"
+    param:
+      -
+        name: 'use_sim_time'
+        value: '$(var use_sim_time)'
+
+# Optionally add TurtleBot driver if testing base_link->sheep transform
+# Uncomment if you want to test the full integration with robot
+# - node:
+#     pkg: "webots_ros2_turtlebot"
+#     exec: "turtlebot_driver"
+#     name: "turtlebot_driver"
+#     param:
+#       -
+#         name: 'use_sim_time'
+#         value: '$(var use_sim_time)'
+
+############################################################################
+# 4.) tag: catch2_integration_test_node (i.e., node which performs the test)
+############################################################################
+- catch2_integration_test_node:
+    pkg: "sheepdog"
+    exec: "integration_test_node"
+    param:
+      -
+        name: 'test_duration'
+        value: '$(var test_duration)'
+      -
+        name: 'use_sim_time'
+        value: '$(var use_sim_time)'

@@ -1,0 +1,13 @@
+<map id="SheepdogNode" name="SheepdogNode">
+<area shape="rect" id="node1" title="State Interface class through which all machine states are run. the node:" alt="" coords="418,484,607,664"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,293,108,370"/>
+<area shape="rect" id="node3" title=" " alt="" coords="133,293,199,370"/>
+<area shape="rect" id="node4" title=" " alt="" coords="223,285,413,377"/>
+<area shape="rect" id="node5" title=" " alt="" coords="449,145,606,223"/>
+<area shape="rect" id="node10" title=" " alt="" coords="437,285,589,377"/>
+<area shape="rect" id="node6" title=" " alt="" coords="599,5,637,83"/>
+<area shape="rect" id="node9" title=" " alt="" coords="630,145,787,223"/>
+<area shape="rect" id="node7" title=" " alt="" coords="829,293,879,370"/>
+<area shape="rect" id="node8" title=" " alt="" coords="613,293,804,370"/>
+<area shape="rect" id="node11" title=" " alt="" coords="923,293,1009,370"/>
+</map>

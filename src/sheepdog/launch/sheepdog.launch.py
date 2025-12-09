@@ -36,10 +36,12 @@ def generate_launch_description():
     my_dir = get_package_share_directory('sheepdog')
     world = LaunchConfiguration('world')
     mode = LaunchConfiguration('mode')
-    use_nav = LaunchConfiguration('nav', default=False)
+    use_nav = LaunchConfiguration('nav', default=True)
     use_slam = LaunchConfiguration('slam', default=False)
+    use_slam_toolbox = LaunchConfiguration('slam_toolbox', default=True)
     use_sim_time = LaunchConfiguration('use_sim_time', default=True)
 
+    
     webots = WebotsLauncher(
         world=PathJoinSubstitution([my_dir, 'worlds', world]),
         mode=mode,
@@ -85,7 +87,7 @@ def generate_launch_description():
     robot_description_path = os.path.join(package_dir, 'resource', 'turtlebot_webots.urdf')
     ros2_control_params = os.path.join(package_dir, 'resource', 'ros2control.yml')
     use_twist_stamped = 'ROS_DISTRO' in os.environ and (os.environ['ROS_DISTRO'] in ['rolling', 'jazzy'])
-    print("-----=--=-=-=-s=acsdjicbdshjbcvhdjsbvh jsdb",use_twist_stamped)
+
     if use_twist_stamped:
         mappings = [('/diffdrive_controller/cmd_vel', '/cmd_vel'), ('/diffdrive_controller/odom', '/odom')]
     else:
@@ -142,6 +144,21 @@ def generate_launch_description():
             condition=launch.conditions.IfCondition(use_slam))
         navigation_nodes.append(turtlebot_slam)
 
+    #SLAM toolbox
+    if 'slam_toolbox' in get_packages_with_prefixes():
+        slam_toolbox = IncludeLaunchDescription(
+            PythonLaunchDescriptionSource(os.path.join(
+                get_package_share_directory('slam_toolbox'),
+                'launch',
+                'online_async_launch.py'
+            )),
+            launch_arguments=[
+                ('use_sim_time', use_sim_time),
+            ],
+            condition=launch.conditions.IfCondition(use_slam_toolbox)
+        )
+        navigation_nodes.append(slam_toolbox)
+
     # Wait for the simulation to be ready to start navigation nodes
     waiting_nodes = WaitForControllerConnection(
         target_driver=turtlebot_driver,
@@ -166,7 +183,11 @@ def generate_launch_description():
             'nav',
             default_value='true',
             description='launch with navigation'
-
+        ),
+        DeclareLaunchArgument(
+            'slam_toolbox',
+            default_value='true',
+            description='Launch with SLAM toolbox'
         ),
         webots,
         webots._supervisor,

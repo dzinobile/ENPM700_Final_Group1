@@ -1,0 +1,5 @@
+<map id="SheepdogNode::sheepDetected" name="SheepdogNode::sheepDetected">
+<area shape="rect" id="node1" title="getter for sheep detected boolean value" alt="" coords="231,31,457,57"/>
+<area shape="rect" id="node2" href="$classEncircleState.html#a75d1ee3046a007e128e73e6988c46aa3" title="Inherited transition function to change state based on current conditions." alt="" coords="5,5,183,32"/>
+<area shape="rect" id="node3" href="$classExploreState.html#ac5a1c3d933c31e74b9e2d71d9fafd33e" title="Inherited transition function to change state based on current conditions." alt="" coords="7,56,181,83"/>
+</map>

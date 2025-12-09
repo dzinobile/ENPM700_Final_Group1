@@ -1,0 +1,4 @@
+<map id="EncircleState" name="EncircleState">
+<area shape="rect" id="node1" title="State in which the robot positions itself to encircle the sheep." alt="" coords="5,175,193,428"/>
+<area shape="rect" id="node2" href="$classStates.html" title="Abstract state interface class for robot states Defines common interface used by all states in the st..." alt="" coords="45,5,154,127"/>
+</map>

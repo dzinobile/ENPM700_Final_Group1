@@ -1,5 +1,5 @@
-# Final Project Phase 1
-[![CICD Workflow status](https://github.com/dzinobile/ENPM700_Final_Group1/actions/workflows/run-unit-test-and-upload-codecov.yml/badge.svg)](https://github.com/dzinobile/ENPM700_TDD_group1/actions/workflows/run-unit-test-and-upload-codecov.yml)
+# Final Project Phase 2
+[![CICD Workflow status](https://github.com/dzinobile/ENPM700_Final_Group1/actions/workflows/run-unit-test-and-upload-codecov.yml/badge.svg)](https://github.com/dzinobile/ENPM700_Final_Group1/actions/workflows/run-unit-test-and-upload-codecov.yml)
 
 [![codecov](https://codecov.io/gh/dzinobile/ENPM700_Final_Group1/graph/badge.svg?token=swo8nEary3)](https://codecov.io/gh/dzinobile/ENPM700_Final_Group1)
 
@@ -7,14 +7,25 @@
 ### AIP Tracker
 https://docs.google.com/spreadsheets/d/12TAMyx9cW5lwyse37VmfeIvLcLHgc6YgxtjMCqo1hIw/edit?usp=sharing
 
+### Phase Review
+https://docs.google.com/document/d/1ttXld3m7X96wpw3BS0YS7ocnr8JOInaBjeMcxNIiW9o/edit?usp=sharing
+
 # Objectives
 Our objective for phase 1 was originally to create proof of concept simulations in Webots demonstrating multi-robot SLAM and the ability to encircle a target, using the turtlebot3 with its built in navigation stack. We would then create the general structure of our final package and beginning filling in the functionality. 
 
-However, we experienced difficulties with launching a full navigation stack for each separate turtlebot. We have adjusted the scope of this phase to instead focus on creating a functional SLAM search with 1 turtlebot3 in a custom environment, with the hope that this will be applicable to a multi-robot simulation in phase 2. 
+However, we experienced difficulties with launching a full navigation stack for each separate turtlebot. We instead split our efforts, with Anvesh focusing on created multi-robot SLAM and Navigation with a custom robots, and Daniel focusing on implementing the EXPLORE, ENCIRCLE, HERD, and DONE states on a turtlebot3 in a custom environment. These separate goals were achieved. The objective was to eventually unite these separate efforts by applying Daniel's code to the custom robot simulation, however this was not feasible in the given time. 
 
-# Sheepdog – Webots + ROS 2 Navigation (Phase 1)
+# Sheepdog – Webots + ROS 2 Navigation
 
-Single-robot “sheepdog” prototype: a TurtleBot3 Burger in Webots explores a world with Nav2, tracks a virtual sheep frame using TF2, and when the robot is close enough, it sends a navigation goal directly to the sheep and saves the current map. This phase is structured as a foundation for a future multi-robot herding swarm.
+Single-robot “sheepdog” prototype: a TurtleBot3 Burger in Webots initializes in the EXPLORE state, during which it conducts a spiral search of the custom world while building a map with SLAM. A virtual sheep broadcasts its position using TF2. 
+
+When the robot comes within a certain distance of the sheep, it "detects" the sheep and switches to the ENCIRCLE state. During this state, it navigates to a new target an offset distance away from the sheep. For multiple robots, this offset x and y distance would vary so that the robots end up encircling the sheep. 
+
+When the robot reaches its target in the ENCIRCLE state, it switches to the HERD state. During this state, the robot moves back an offset distance from the location of the sheep pen, which in our world example is at the origin. This location is also broadcast by the same TF broadcaster that broadcasts the sheep virtual location. The offest distance from this location is equal to the offset distance from the sheep, so for multiple bots this would result in them moving as a unit, retaining the circular shape while the sheep would move with them. 
+
+When the robot reaches its target in the HERD state, it switches to the DONE state. This is a dummy state that does not command the robot to do anything. 
+
+# Multi_Robot - Webots + multi-robot SLAM 
 
 ---
 ## Contents
@@ -78,7 +89,8 @@ The `sheepdog` package provides:
     - `joint_state_broadcaster`
     - `robot_state_publisher`
     - `static_transform_publisher` for `base_link → base_footprint`.
-  - Optionally launch the Nav2 stack from `turtlebot3_navigation2` using a static map (`my_world.yaml`).
+  - Launch the Nav2 stack from `turtlebot3_navigation2` using a static map (`my_world.yaml`)
+  - Launch the SLAM toolbox from `slam_toolbox`
 
 **2. Sheep TF broadcaster (`sheep_broadcaster`)**
 
@@ -88,36 +100,30 @@ The `sheepdog` package provides:
 - Publishes at 10 Hz:
   - Parent frame: `map`
   - Child frame: `sheep`
-  - Pose: currently hard-coded (e.g., `(4.0, 4.0, 0.0)` with a fixed yaw).
+  - Pose: currently hard-coded to location of sheep model in world file.
+- Publishes at 10 Hz:
+  - Parent frame: `map`
+  - Child frame: `pen`
+  - Pose: Currently hard-coded to location of pen in world file.
 
-**3. Spiral exploration controller (`nav_goal_sender`)**
+**3. Sheepdog Finite State Machine**
+- Source: `src/sheepdog/src/SheepdogNode.cpp`
+- Node name: `sheepdog_node`
+- Uses: `tf2_ros::TransformListener`
+- Creates a Finite State Machine consisting of the following states:
+  - EXPLORE
+    - Explores map in a spiral pattern until sheep is located
+    - When sheep is located, switches to ENCIRCLE
+  - ENCIRCLE
+    - Positions robots to encircle sheep 
+    - When sheep is encircled, switches to HERD
+  - HERD
+    - Robot(s) move to pen while maintaining position relative to sheep (assuming sheep moving with robots)
+    - When robot reaches target within pen, switches to DONE
+  - DONE
+    - Dummy state, does not publish any commands
 
-- Source: `src/sheepdog/src/nav_goal_sender.cpp`
-- Node name: `nav_goal_sender`
-- Uses: `rclcpp_action::Client<nav2_msgs::action::NavigateToPose>`
-- Responsibilities:
-  - Wait for `/navigate_to_pose` action server (Nav2).
-  - Maintain an integer grid position `(x_, y_)` in the map frame.
-  - Move in directions `[+x, +y, -x, -y]` with an increasing `step_length_` to trace an outward spiral.
-  - After each result (success or failure), send the next goal, ensuring continuous exploration.
 
-**4. Sheep proximity trigger + map saver (`sheep_nav_trigger`)**
-
-- Source: `src/sheepdog/src/sheep_nav_trigger.cpp`
-- Node name: `sheep_nav_trigger`
-- Uses:
-  - `tf2_ros::Buffer` + `tf2_ros::TransformListener`
-  - `rclcpp_action::Client<nav2_msgs::action::NavigateToPose>`
-  - `rclcpp::Client<nav2_msgs::srv::SaveMap>`
-- Responsibilities (periodic timer):
-  1. Lookup TF transforms:
-     - `map → base_footprint`
-     - `map → sheep`
-  2. Compute planar distance between `base_footprint` and `sheep` in the map frame.
-  3. If distance ≤ `trigger_distance_` (currently 2.0 m):
-     - Send a Nav2 `NavigateToPose` goal exactly at the `sheep` pose.
-     - Call `/map_saver/save_map` to persist the current map (`sheep_snapshot_map`).
-     - Set `triggered_` to `true` so the trigger fires only once.
 
 ### Execution Pipeline
 
@@ -127,39 +133,57 @@ End-to-end behavior:
    - `sheepdog.launch.py` starts Webots and the TurtleBot3 Burger.
    - Controllers and TFs are configured.
    - Nav2 stack comes up using the static map (`my_world.yaml`) aligned with the Webots world.
+   - Slam_toolbox comes up and begins 
 
-2. **Sheep pose publishing**
+2. **Sheep and Pen pose publishing**
    - `sheep_broadcaster` publishes a TF `map → sheep`, representing the known sheep pose.
-   - This TF is available to any node performing planning or trigger logic.
+   - `sheep_broadcaster` also publishes a TF `map → pen`, representing the known pen location. 
+   - These TFs are available to the Sheepdog Node so it knows when to transition states.
 
-3. **Exploration**
-   - `nav_goal_sender` waits for `/navigate_to_pose`.
+3. **Sheepdog Node**
+   - `sheepdog_node` initializes in EXPLORE state and changes state based on current positon relative to sheep or pen
+
+4. **EXPLORE**
    - Once active, it sends a sequence of map-frame goals in a grid spiral.
    - Nav2 plans and executes each goal, causing the robot to explore the map.
+   - The slam toolbox allows the robot to map its environment as it explores, enabling robust path planning.
 
-4. **Sheep detection and reaction**
-   - `sheep_nav_trigger` periodically consults TF between `base_footprint` and `sheep`.
-   - When the robot reaches the trigger radius around the sheep:
-     - A final Nav2 goal is set to the exact sheep TF pose.
-     - A map snapshot is saved using the `SaveMap` service.
+4. **ENCIRCLE**
+   - `sheepdog_node` periodically consults TF between `base_link` and `sheep`.
+   - When the robot reaches the trigger radius around the sheep, it switches to ENCIRCLE
+   - in ENCIRCLE, a new Nav2 goal is set that is offset by 0.5 meters from the exact sheep pose.
 
-This structure is deliberately generic so that additional robots (multi-robot “dogs”) and more complex sheep motion models can be added in later phases.
+5. **HERD**
+   - When the robot reaches the ENCIRCLE goal, it switches to HERD
+   - In HERD, a new Nav2 goal is set that is offset from the center point of the pen.
+   - The robot (or all robots) move to the pen, theoretically keeping the sheep enircled as they move
+
+6. **DONE**
+   - When the robot reaches the HERD goal it switches to DONE
+   - DONE is a dummy state that just doesnt publish any commands.
+
 
 ---
 
 ## UML & TF2 Diagrams
 
-- Activity diagram (pipeline overview):
-  <img src="media/Sequence.png" width="600">
+- Class Inheritance:
+  <img src="src/sheepdog/docs/html/classStates__inherit__graph.png" width="600">
 
+- TF2 frame tree diagram of connecting local maps:
+  <img src="media/multiRobotMapping.png" width="1200">
 
-- Class diagram (nodes and their relationships):
-  <img src="media/ClassDiagram.png" width="1200">  
+  - TF2 frame tree diagram:
+  <img src="media/frames-1.png" width="1200">
 
-- TF2 frame tree diagram:
-  <img src="media/frames.png" width="1200">
+ - Additional details at `src/sheepdog/docs/html/index.html`
 
 ---
+
+## Multi Robot Mapping
+
+- RviZ Visualization for multi Robot Mapping:
+  <img src="media/multiRobotViz.png" width="1200">
 
 ## ROS 2 Interfaces
 
@@ -359,20 +383,11 @@ In a third terminal:
 cd ~/sheepdog_ws
 source install/setup.bash
 
-ros2 run sheepdog nav_goal_sender
+ros2 run sheepdog sheepdog_node
 ```
 
 The robot begins to receive a sequence of `NavigateToPose` goals and explores the map in a growing spiral centered at the origin of the map frame.
 
-### 4. Sheep proximity trigger + map saving
-
-In a fourth terminal:
-
-```bash
-cd ~/sheepdog_ws
-source install/setup.bash
-
-ros2 run sheepdog sheep_nav_trigger
 ```
 
 Behavior:
@@ -416,22 +431,6 @@ colcon test-result --verbose
 
 Note: the integration test expects a running Nav2 stack and appropriate simulation or map server configuration. A launch file named `integration_test.launch.yaml` is referenced in CMake as an example and can be configured to start the full stack automatically during CI.
 
-
----
-
-## Future Extensions
-
-The current design is intended as Phase 1 of a larger project:
-
-* **Multi-robot extension:**
-  Multiple TurtleBot3 “sheepdogs,” each with its own namespace, `nav_goal_sender`, and `sheep_nav_trigger`.
-* **Dynamic sheep models:**
-  Replace static TF broadcasting with a simulated moving sheep in Webots, with pose updates broadcast from a Webots controller.
-* **Herding strategies:**
-  Use behavior trees or explicit finite-state machines for herding, surrounding, and guiding the sheep toward target regions.
-* **Richer testing:**
-  Add more integration tests combining SLAM, multi-robot coordination, and robustness to sensing or TF delays.
-
 ---
 
 ## License
@@ -440,6 +439,3 @@ This project is licensed under the **Apache License 2.0**.
 
 See the `LICENSE` file for full terms.
 
-```
-::contentReference[oaicite:0]{index=0}
-```

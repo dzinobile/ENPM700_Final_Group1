@@ -1,0 +1,4 @@
+<map id="EncircleState::initializeNavClient" name="EncircleState::initializeNavClient">
+<area shape="rect" id="node1" title="Function to initialize a navigation client." alt="" coords="213,5,384,47"/>
+<area shape="rect" id="node2" href="$classEncircleState.html#a5566ff64b74cd41588f0f5c10b7ccc6f" title="Inherited update function to activate behaviors for current state." alt="" coords="5,13,165,39"/>
+</map>
