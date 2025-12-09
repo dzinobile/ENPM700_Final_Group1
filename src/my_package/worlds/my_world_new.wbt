@@ -1,0 +1,523 @@
+#VRML_SIM R2025a utf8
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/develop/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/develop/projects/objects/floors/protos/Floor.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/develop/projects/appearances/protos/Grass.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/develop/projects/objects/animals/protos/Sheep.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/garden/protos/Gnome.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/garden/protos/WateringCan.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/garden/protos/PicketFenceWithDoor.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/garden/protos/PicketFence.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/street_furniture/protos/Fence.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/garden/protos/DogHouse.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/garden/protos/Wheelbarrow.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/garden/protos/Slide.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/trees/protos/Cypress.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/street_furniture/protos/StoneFountain.proto"
+
+WorldInfo {
+  info [
+    "Simple TurtleBot3 Burger simulation that can be controlled by a ROS."
+  ]
+  title "ROS2 simulation of the TurtleBot3 Burger robot"
+  basicTimeStep 20
+}
+Viewpoint {
+  orientation -0.33185733874619844 -0.09874274160469809 0.9381474178937331 3.686018050088086
+  position 1.700313773507203 1.0549607538959629 1.4846240848267684
+  follow "robot1"
+}
+TexturedBackground {
+  texture "empty_office"
+  skybox FALSE
+}
+
+Floor {
+  name "floor(1)"
+  size 20 20
+  tileSize 2 2
+  appearance Grass {
+    textureTransform TextureTransform {
+      scale 0.6 0.6
+    }
+  }
+}
+Cypress {
+  translation -4.16 -1.68 0
+  name "cypress tree(17)"
+}
+Cypress {
+  translation -3.25 2.67 0
+  name "cypress tree(16)"
+}
+Cypress {
+  translation -2 4 0
+  name "cypress tree(10)"
+}
+Cypress {
+  translation 2 -6.67 0
+  name "cypress tree(8)"
+}
+Slide {
+  translation 8.52 -7.86 0
+  rotation 0 0 1 3.14159
+}
+Cypress {
+  translation 0 6 0
+}
+StoneFountain {
+  translation 6.22 -1.59 0
+}
+Cypress {
+  translation 3.57 0 0
+  name "cypress tree(1)"
+}
+Cypress {
+  translation 3.72 -1.64 0
+  name "cypress tree(13)"
+}
+Cypress {
+  translation 3.7 2.79 0
+  name "cypress tree(14)"
+}
+Cypress {
+  translation 2 4.5 0
+  name "cypress tree(9)"
+}
+Cypress {
+  translation 2 -3.25 0
+  name "cypress tree(7)"
+}
+Cypress {
+  translation 0 -5 0
+  name "cypress tree(4)"
+}
+Cypress {
+  translation -2 -6.5 0
+  name "cypress tree(12)"
+}
+Cypress {
+  translation 0 -8 0
+  name "cypress tree(5)"
+}
+Fence {
+  translation -10 -10 0
+}
+Fence {
+  translation -10 -5 0
+  name "fence(1)"
+}
+Fence {
+  translation -10 0 0
+  name "fence(2)"
+}
+Fence {
+  translation -10 5 0
+  name "fence(3)"
+}
+Wheelbarrow {
+  translation -7.02796 -2.38612 0
+  rotation 0 0 1 -0.785395307179586
+}
+Fence {
+  translation -10 10 0
+  rotation 0 0 1 -1.5707953071795862
+  name "fence(4)"
+}
+Fence {
+  translation -5 10 0
+  rotation 0 0 1 -1.5707953071795862
+  name "fence(5)"
+}
+DogHouse {
+  translation 0 9 0
+  rotation 0 0 1 -1.5707953071795862
+}
+Fence {
+  translation 0 10 0
+  rotation 0 0 1 -1.5707953071795862
+  name "fence(6)"
+}
+Fence {
+  translation 5 10 0
+  rotation 0 0 1 -1.5707953071795862
+  name "fence(7)"
+}
+Fence {
+  translation 10 10 0
+  rotation 0 0 1 3.14159
+  name "fence(8)"
+}
+Fence {
+  translation 10 5 0
+  rotation 0 0 1 3.14159
+  name "fence(9)"
+}
+Fence {
+  translation 10 0 0
+  rotation 0 0 1 3.14159
+  name "fence(10)"
+}
+Fence {
+  translation 10 -5 0
+  rotation 0 0 1 3.14159
+  name "fence(11)"
+}
+Fence {
+  translation 10 -10 0
+  rotation 0 0 -1 -1.5707953071795862
+  name "fence(12)"
+}
+Fence {
+  translation 5 -10 0
+  rotation 0 0 -1 -1.5707953071795862
+  name "fence(13)"
+}
+Fence {
+  translation 0 -10 0
+  rotation 0 0 -1 -1.5707953071795862
+  name "fence(14)"
+}
+Fence {
+  translation -5 -10 0
+  rotation 0 0 -1 -1.5707953071795862
+  name "fence(15)"
+}
+Sheep {
+  translation -4 1 0
+  rotation 0 0 1 1
+  name "sheep (1)"
+}
+PicketFence {
+  translation 1 2 0
+  rotation 0 0 1 -1.5707953071795862
+}
+PicketFence {
+  translation 1 -2.53 0
+  rotation 0 0 1 -1.5707953071795862
+  name "picket fence(1)"
+}
+PicketFence {
+  translation 5.5 9.86 0
+  name "picket fence(3)"
+}
+PicketFenceWithDoor {
+  translation 1 2 0
+  rotation 0 0 1 -3.1415853071795863
+}
+PicketFenceWithDoor {
+  translation -1 -2.5 0
+  rotation 0 0 1 7.33682e-06
+  name "picket fence with door(1)"
+}
+Gnome {
+  translation 2.16 -2.72 0
+}
+WateringCan {
+  translation -2.95 -5.6 0
+}
+
+Robot {
+  translation 0.5 0.05 0.05
+  rotation 0 0 0 0 
+  children [
+    HingeJoint {
+      jointParameters HingeJointParameters {
+        axis 0 1 0
+        anchor 0 0 0.025
+      }
+      device [
+        RotationalMotor {
+          name "left wheel motor"
+        }
+      ]
+      endPoint Solid {
+        translation 0 0.045 0.025
+        children [
+          DEF WHEEL Transform {
+            rotation 1 0 0 1.5707996938995747
+            children [
+              Shape {
+                appearance PBRAppearance {
+                  baseColor 1 0 0
+                  roughness 1
+                  metalness 0
+                }
+                geometry Cylinder {
+                  height 0.01
+                  radius 0.025
+                }
+              }
+            ]
+          }
+        ]
+        name "left wheel"
+        boundingObject USE WHEEL
+        physics Physics {
+        }
+      }
+    }
+    HingeJoint {
+      jointParameters HingeJointParameters {
+        axis 0 1 0
+        anchor 0 0 0.025
+      }
+      device [
+        RotationalMotor {
+          name "right wheel motor"
+        }
+      ]
+      endPoint Solid {
+        translation 0 -0.045 0.025
+        children [
+          USE WHEEL
+        ]
+        name "right wheel"
+        boundingObject USE WHEEL
+        physics Physics {
+        }
+      }
+    }
+    Transform {
+      translation 0 0 0.045
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0 0 1
+            roughness 1
+            metalness 0
+          }
+          geometry DEF BODY Cylinder {
+            height 0.08
+            radius 0.045
+          }
+        }
+      ]
+    }
+    Lidar {
+      translation 0 0 0.1
+      rotation 0 0 0 0
+      name "robot1/lidar1"
+      fieldOfView 6.283185       
+      horizontalResolution 720   # 1 deg per beam
+      numberOfLayers 1
+      # You can also set minRange / maxRange if desired
+      minRange 0.01
+      maxRange 20.0
+    }
+  ]
+  boundingObject Transform {
+    translation 0 0 0.0415
+    children [
+      USE BODY
+    ]
+  }
+  physics Physics {
+  }
+  controller "<extern>"
+  name "robot1"
+}
+
+
+Robot {
+  translation 0 0.05 0.05
+  rotation 0 1 0 0
+  children [
+    HingeJoint {
+      jointParameters HingeJointParameters {
+        axis 0 1 0
+        anchor 0 0 0.025
+      }
+      device [
+        RotationalMotor {
+          name "left wheel motor"
+        }
+      ]
+      endPoint Solid {
+        translation 0 0.045 0.025
+        children [
+          DEF WHEEL Transform {
+            rotation 1 0 0 1.5707996938995747
+            children [
+              Shape {
+                appearance PBRAppearance {
+                  baseColor 1 0 0
+                  roughness 1
+                  metalness 0
+                }
+                geometry Cylinder {
+                  height 0.01
+                  radius 0.025
+                }
+              }
+            ]
+          }
+        ]
+        name "left wheel"
+        boundingObject USE WHEEL
+        physics Physics {
+        }
+      }
+    }
+    HingeJoint {
+      jointParameters HingeJointParameters {
+        axis 0 1 0
+        anchor 0 0 0.025
+      }
+      device [
+        RotationalMotor {
+          name "right wheel motor"
+        }
+      ]
+      endPoint Solid {
+        translation 0 -0.045 0.025
+        children [
+          USE WHEEL
+        ]
+        name "right wheel"
+        boundingObject USE WHEEL
+        physics Physics {
+        }
+      }
+    }
+    Transform {
+      translation 0 0 0.0415
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0 0 1
+            roughness 1
+            metalness 0
+          }
+          geometry DEF BODY Cylinder {
+            height 0.08
+            radius 0.045
+          }
+        }
+      ]
+    }
+    Lidar {
+      translation 0 0 0.1
+      rotation 0 0 0 0
+      name "robot2/lidar1"
+      fieldOfView 6.282        # 360 deg
+      horizontalResolution 720   # 0.5 deg per beam
+      numberOfLayers 1
+      # You can also set minRange / maxRange if desired
+      minRange 0.01
+      maxRange 20.0
+    }
+  ]
+  boundingObject Transform {
+    translation 0 0 0.0415
+    children [
+      USE BODY
+    ]
+  }
+  physics Physics {
+  }
+  controller "<extern>"
+  name "robot2"
+}
+
+
+Robot {
+  translation -0.5 0.05 0.05
+  rotation 0 1 0 0
+  children [
+    HingeJoint {
+      jointParameters HingeJointParameters {
+        axis 0 1 0
+        anchor 0 0 0.025
+      }
+      device [
+        RotationalMotor {
+          name "left wheel motor"
+        }
+      ]
+      endPoint Solid {
+        translation 0 0.045 0.025
+        children [
+          DEF WHEEL Transform {
+            rotation 1 0 0 1.5707996938995747
+            children [
+              Shape {
+                appearance PBRAppearance {
+                  baseColor 1 0 0
+                  roughness 1
+                  metalness 0
+                }
+                geometry Cylinder {
+                  height 0.01
+                  radius 0.025
+                }
+              }
+            ]
+          }
+        ]
+        name "left wheel"
+        boundingObject USE WHEEL
+        physics Physics {
+        }
+      }
+    }
+    HingeJoint {
+      jointParameters HingeJointParameters {
+        axis 0 1 0
+        anchor 0 0 0.025
+      }
+      device [
+        RotationalMotor {
+          name "right wheel motor"
+        }
+      ]
+      endPoint Solid {
+        translation 0 -0.045 0.025
+        children [
+          USE WHEEL
+        ]
+        name "right wheel"
+        boundingObject USE WHEEL
+        physics Physics {
+        }
+      }
+    }
+    Transform {
+      translation 0 0 0.0415
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0 0 1
+            roughness 1
+            metalness 0
+          }
+          geometry DEF BODY Cylinder {
+            height 0.08
+            radius 0.045
+          }
+        }
+      ]
+    }
+    Lidar {
+      translation 0.042 0.02 0.063
+      rotation 0 0 1 0.5236
+      name "robot3/lidar1"
+      fieldOfView 6.282        # 180 deg
+      horizontalResolution 360   # 0.5 deg per beam
+      numberOfLayers 1
+      # You can also set minRange / maxRange if desired
+      minRange 0.01
+      maxRange 20.0
+    }
+  ]
+  boundingObject Transform {
+    translation 0 0 0.0415
+    children [
+      USE BODY
+    ]
+  }
+  physics Physics {
+  }
+  controller "<extern>"
+  name "robot3"
+}

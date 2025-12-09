@@ -1,0 +1,50 @@
+slam_toolbox_robot1:
+  ros__parameters:
+    use_sim_time: false
+
+    # Frames for robot1
+    odom_frame: "odom_robot1"
+    map_frame: "robot1/map"
+    base_frame: "robot1/base_link"
+
+    # Let’s use a generic scan name and remap it
+    scan_topic: "scan"
+
+    publish_to_tf: true
+    resolution: 0.05
+    publish_period: 0.5
+    max_laser_range: 20.0
+    minimum_travel_distance: 0.2
+    minimum_travel_heading: 0.2618
+
+
+
+
+
+
+
+
+#==========================
+# slam_toolbox:
+#   ros__parameters:
+#     use_sim_time: false
+
+#     # Frames
+#     odom_frame: "odom_robot1"
+#     map_frame: "map_robot1"
+#     base_frame: "robot1/base_link"
+
+#     # Topics
+#     scan_topic: "/robot1/robot1/lidar1"
+
+#     # Mode: online synchronous mapping
+#     mode: "mapping"         # or "sync" depending on version, but "mapping" is clearer
+#     # slam_toolbox: "SYNC"
+
+#     # Reasonable defaults
+#     publish_to_tf: True
+#     resolution: 0.05
+#     publish_period: 0.5
+#     max_laser_range: 20.0     # adapt to your Webots lidar
+#     minimum_travel_distance: 0.1
+#     minimum_travel_heading: 0.1745   # 10 degrees
