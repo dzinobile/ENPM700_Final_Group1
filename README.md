@@ -7,6 +7,9 @@
 ### AIP Tracker
 https://docs.google.com/spreadsheets/d/12TAMyx9cW5lwyse37VmfeIvLcLHgc6YgxtjMCqo1hIw/edit?usp=sharing
 
+### Phase Review
+https://docs.google.com/document/d/1ttXld3m7X96wpw3BS0YS7ocnr8JOInaBjeMcxNIiW9o/edit?usp=sharing
+
 # Objectives
 Our objective for phase 1 was originally to create proof of concept simulations in Webots demonstrating multi-robot SLAM and the ability to encircle a target, using the turtlebot3 with its built in navigation stack. We would then create the general structure of our final package and beginning filling in the functionality. 
 
@@ -457,4 +460,3 @@ See the `LICENSE` file for full terms.
 ::contentReference[oaicite:0]{index=0}
 ```
 
-ros2 launch slam_toolbox online_async_launch.py use_sim_time:=true
