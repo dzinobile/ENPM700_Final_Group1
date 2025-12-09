@@ -349,10 +349,7 @@ In a first terminal:
 cd ~/sheepdog_ws
 source install/setup.bash
 
-ros2 launch sheepdog sheepdog.launch.py \
-  world:=my_world.wbt \
-  nav:=true \
-  use_sim_time:=true
+ros2 launch sheepdog sheepdog.launch.py 
 ```
 
 This launch file:
@@ -360,7 +357,7 @@ This launch file:
 * Starts Webots with `my_world.wbt`.
 * Spawns the TurtleBot3 Burger.
 * Brings up the robot drivers, TFs, and controllers.
-* Launches Nav2 configured to use `resource/my_world.yaml`.
+* Launches Nav2 and Slam_toolbox configured to use `resource/my_world.yaml`.
 
 ### 2. Sheep TF publisher
 
@@ -373,9 +370,9 @@ source install/setup.bash
 ros2 run sheepdog sheep_broadcaster
 ```
 
-This node continuously publishes `map → sheep` TF.
+This node continuously publishes `map → sheep` TF and `map → pen` TF.
 
-### 3. Spiral exploration
+### 3. Sheepdog Node
 
 In a third terminal:
 
@@ -386,20 +383,13 @@ source install/setup.bash
 ros2 run sheepdog sheepdog_node
 ```
 
-The robot begins to receive a sequence of `NavigateToPose` goals and explores the map in a growing spiral centered at the origin of the map frame.
+The robot initializes in the EXPLORE state and begins to search its environment in a spiral pattern.
+The robot listens to the sheep position broadcaster and transitions to ENCIRCLE state once it is near enough to the sheep.
+The robot sets a navigation goal near the sheep and transitions to HERD once it reaches this goal.
+The robot sets a navigation goal near the pen based on the pen TF broadcaster and transitions to DONE state once it reaches this goal.
 
 ```
 
-Behavior:
-
-* Periodically looks up `map → base_footprint` and `map → sheep`.
-* Computes the planar distance; once it is less than or equal to `trigger_distance_` (2 m):
-
-  * Sends a `NavigateToPose` goal exactly at the sheep TF pose.
-  * Calls `/map_saver/save_map` with configured parameters, saving a map called `sheep_snapshot_map`.
-* Afterwards, `triggered_` is set to `true` so the trigger is one-shot.
-
----
 
 ## Testing
 
